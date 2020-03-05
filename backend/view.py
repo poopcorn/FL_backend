@@ -1,19 +1,18 @@
 from django.http import HttpResponse
 from django.http import JsonResponse
+import json
+
+PATH = '/home/zty_11621014/federated/models/gradients'
 
 
-def hello(request):
- return HttpResponse("Hello world!")
+# def hello(request):
+#  return HttpResponse("Hello world!")
 
 
 
 def test(request):
-    test_data = [{
-        'name': 'aaa',
-        'age': 12
-    },{
-        'name': 'bbb',
-        'age': 15
-    }]
+    file = open(PATH + 'gradients.json', 'r', encoding='utf-8')
+    data = json.load(file)
+    return data
 
-    return JsonResponse({'ret': 0, 'relist': test_data})
+
