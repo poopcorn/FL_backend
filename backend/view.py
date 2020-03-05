@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import json
 
-PATH = '/home/zty_11621014/federated/models/gradients'
+PATH = '/home/zty_11621014/federated/models/gradients/'
 
 
 # def hello(request):
