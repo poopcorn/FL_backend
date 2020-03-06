@@ -13,13 +13,16 @@ import json
 def krum(request):
 
     k = int(request.GET.get('k', -1))
-    layers = request.GET.get('layers', ['conv1', 'conv2', 'dense'])
+    layers = request.GET.get('layers', -1)
 
     # str layers 2 list
-    layers = layers[1: len(layers) - 1]
-    layers = layers.split(',')
-    for i in range(len(layers)):
-        layers[i] = layers[i][1: len(layers[i]) - 1]
+    if layers == -1:
+        layers = ['conv1', 'conv2', 'dense']
+    else:
+        layers = layers[1: len(layers) - 1]
+        layers = layers.split(',')
+        for i in range(len(layers)):
+            layers[i] = layers[i][1: len(layers[i]) - 1]
 
     file = open(JSON_PATH + 'gradients.json', 'r', encoding='utf-8')
     data = json.load(file)
