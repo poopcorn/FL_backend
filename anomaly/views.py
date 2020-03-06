@@ -21,7 +21,7 @@ def krum(request):
     for i in range(len(layers)):
         layers[i] = layers[i][1: len(layers[i]) - 1]
 
-    file = open('/Users/zhangtianye/Documents/FD/Femnist/test/' + 'gradients.json', 'r', encoding='utf-8')
+    file = open(JSON_PATH + 'gradients.json', 'r', encoding='utf-8')
     data = json.load(file)
     file.close()
     length = len(data)
