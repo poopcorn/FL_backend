@@ -1,11 +1,15 @@
 # from django.shortcuts import render
 from django.http import JsonResponse
+import json
 
-from backend.settings import JSON_PATH
 from anomaly.metrics.krum import Krum
 # from anomaly.metrics.med import Med
 from anomaly.metrics.zeno import Zeno
-import json
+from anomaly.metrics.fools import Fools
+from anomaly.metrics.auror import Auror
+from anomaly.metrics.sniper import Sniper
+
+from backend.settings import JSON_PATH
 
 # JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
 
@@ -36,7 +40,7 @@ def get_grad(path, layers, round):
             vec[key] += data[key][item]
     return vec
 
-
+# get the performance of a certain round
 def get_perf(path, round, stage):
     file = open(path + 'performance.json', 'r', encoding='utf-8')
     data = json.load(file)
@@ -55,7 +59,7 @@ def krum(request):
 
     gradients = get_grad(JSON_PATH, layers, -1)
     krum_obj = Krum(k)
-    return JsonResponse(krum_obj.get_score(gradients,layers),safe=False)
+    return JsonResponse(krum_obj.get_score(gradients),safe=False)
 
 # def geo_med(request):
 #
@@ -67,6 +71,7 @@ def krum(request):
 
 def zeno(request):
 
+    # suggest p = 100
     p = float(request.GET.get('p', -1))
 
     perf_this = get_perf(JSON_PATH, -1, 'train')
@@ -77,3 +82,32 @@ def zeno(request):
     zeno_obj = Zeno(p)
 
     return JsonResponse(zeno_obj.score(perf_this, perf_last, grad_this, grad_last), safe=False)
+
+def fools(request):
+
+    k = int(request.GET.get('k', -1))
+    layers = get_layer(request.GET.get('layers', -1))
+
+    gradients = get_grad(JSON_PATH, layers, -1)
+    fools_obj = Fools(k)
+    return JsonResponse(fools_obj.score(gradients), safe=False)
+
+def auror(request):
+
+    k = int(request.GET.get('k', -1))
+    layers = get_layer(request.GET.get('layers', -1))
+    gradients = get_grad(JSON_PATH, layers, -1)
+
+    auror_obj = Auror(k)
+
+
+    return JsonResponse(auror_obj.score(gradients), safe=False)
+
+def sniper(request):
+
+    p = float(request.GET.get('p', -1))
+    layers = get_layer(request.GET.get('layers', -1))
+    gradients = get_grad(JSON_PATH, layers, -1)
+
+    sniper_obj = Sniper(gradients, p)
+    return JsonResponse(sniper_obj.score(), safe=False)

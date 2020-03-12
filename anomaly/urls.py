@@ -19,6 +19,9 @@ from anomaly import views
 
 urlpatterns = [
     path('krum/',views.krum),
-    # path('med/',views.geo_med)
-    path('zeno/', views.zeno)
+    # path('med/',views.geo_med),
+    path('zeno/', views.zeno),
+    path('foolsgold/', views.fools),
+    path('auror/', views.auror),
+    path('sniper/', views.sniper)
 ]

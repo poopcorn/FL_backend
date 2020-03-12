@@ -13,6 +13,8 @@ class Zeno:
         for key in perf_this:
             res[key] = perf_last[key]['loss'] - perf_this[key]['loss'] - \
                        self.p * np.sqrt(np.sum(np.square(np.asarray(grad_this[key]) - np.asarray(grad_last[key]))))
+            # print(perf_last[key]['loss'] - perf_this[key]['loss'], self.p * np.sqrt(np.sum(np.square(np.asarray(grad_this[key]) - np.asarray(grad_last[key])))))
+
 
         max_val = max(res.values())
         min_val = min(res.values())
