@@ -18,5 +18,7 @@ from django.urls import path
 from anomaly import views
 
 urlpatterns = [
-    path('krum/',views.krum)
+    path('krum/',views.krum),
+    # path('med/',views.geo_med)
+    path('zeno/', views.zeno)
 ]
