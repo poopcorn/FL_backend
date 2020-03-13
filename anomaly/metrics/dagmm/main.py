@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     # Training settings
     parser.add_argument('--num_epochs', type=int, default=200)
-    parser.add_argument('--batch_size', type=int, default=16)
+    parser.add_argument('--batch_size', type=int, default=35)
     parser.add_argument('--gmm_k', type=int, default=4)
     parser.add_argument('--lambda_energy', type=float, default=0.1)
     parser.add_argument('--lambda_cov_diag', type=float, default=0.005)

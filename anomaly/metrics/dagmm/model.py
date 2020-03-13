@@ -26,7 +26,7 @@ class DaGMM(nn.Module):
         super(DaGMM, self).__init__()
 
         layers = []
-        layers += [nn.Linear(118,60)]
+        layers += [nn.Linear(2049,60)]
         layers += [nn.Tanh()]        
         layers += [nn.Linear(60,30)]
         layers += [nn.Tanh()]        
@@ -44,7 +44,7 @@ class DaGMM(nn.Module):
         layers += [nn.Tanh()]        
         layers += [nn.Linear(30,60)]
         layers += [nn.Tanh()]        
-        layers += [nn.Linear(60,118)]
+        layers += [nn.Linear(60,2049)]
 
         self.decoder = nn.Sequential(*layers)
 

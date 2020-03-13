@@ -88,7 +88,7 @@ class Solver(object):
 
         self.ap_global_train = np.array([0,0,0])
         for e in range(start, self.num_epochs):
-            for i, (input_data, labels) in enumerate(tqdm(self.data_loader)):
+            for i, input_data in enumerate(tqdm(self.data_loader)):
                 iter_ctr += 1
                 start = time.time()
 

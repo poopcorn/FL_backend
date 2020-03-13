@@ -17,32 +17,32 @@ class KDD99Loader(object):
         self.mode=mode
         data = np.load(data_path)
 
-        labels = data["x"][:,-1]
-        features = data["x"][:,:-1]
-        N, D = features.shape
+        # labels = data["x"][:,-1]
+        features = data["x"]
+        # N, D = features.shape
         
-        normal_data = features[labels==1]
-        normal_labels = labels[labels==1]
+        # normal_data = features[labels==1]
+        # normal_labels = labels[labels==1]
 
-        N_normal = normal_data.shape[0]
+        # N_normal = normal_data.shape[0]
 
-        attack_data = features[labels==0]
-        attack_labels = labels[labels==0]
+        data = features
+        # attack_labels = labels[labels==0]
 
-        N_attack = attack_data.shape[0]
+        N = data.shape[0]
 
-        randIdx = np.arange(N_attack)
+        randIdx = np.arange(N)
         np.random.shuffle(randIdx)
-        N_train = N_attack // 2
+        N_train = N
 
-        self.train = attack_data[randIdx[:N_train]]
-        self.train_labels = attack_labels[randIdx[:N_train]]
+        self.train = data[randIdx[:N_train]]
+        # self.train_labels = attack_labels[randIdx[:N_train]]
 
-        self.test = attack_data[randIdx[N_train:]]
-        self.test_labels = attack_labels[randIdx[N_train:]]
-
-        self.test = np.concatenate((self.test, normal_data),axis=0)
-        self.test_labels = np.concatenate((self.test_labels, normal_labels),axis=0)
+        # self.test = attack_data[randIdx[N_train:]]
+        # self.test_labels = attack_labels[randIdx[N_train:]]
+        #
+        # self.test = np.concatenate((self.test, normal_data),axis=0)
+        # self.test_labels = np.concatenate((self.test_labels, normal_labels),axis=0)
 
 
     def __len__(self):
@@ -57,9 +57,11 @@ class KDD99Loader(object):
 
     def __getitem__(self, index):
         if self.mode == "train":
-            return np.float32(self.train[index]), np.float32(self.train_labels[index])
+            return np.float32(self.train[index])
+            # return np.float32(self.train[index]), np.float32(self.train_labels[index])
         else:
-           return np.float32(self.test[index]), np.float32(self.test_labels[index])
+            return np.float32(self.test[index])
+        # return np.float32(self.test[index]), np.float32(self.test_labels[index])
         
 
 def get_loader(data_path, batch_size, mode='train'):
