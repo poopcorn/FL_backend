@@ -181,7 +181,7 @@ class Solver(object):
         cov_sum = 0
         gamma_sum = 0
 
-        for it, (input_data, labels) in enumerate(self.data_loader):
+        for it, input_data in enumerate(self.data_loader):
             input_data = self.to_var(input_data)
             enc, dec, z, gamma = self.dagmm(input_data)
             phi, mu, cov = self.dagmm.compute_gmm_params(z, gamma)
@@ -204,54 +204,55 @@ class Solver(object):
         print("cov :\n",train_cov)
 
         train_energy = []
-        train_labels = []
+        # train_labels = []
         train_z = []
-        for it, (input_data, labels) in enumerate(self.data_loader):
+        for it, input_data in enumerate(self.data_loader):
             input_data = self.to_var(input_data)
             enc, dec, z, gamma = self.dagmm(input_data)
             sample_energy, cov_diag = self.dagmm.compute_energy(z, phi=train_phi, mu=train_mu, cov=train_cov, size_average=False)
             
             train_energy.append(sample_energy.data.cpu().numpy())
             train_z.append(z.data.cpu().numpy())
-            train_labels.append(labels.numpy())
+            # train_labels.append(labels.numpy())
 
 
         train_energy = np.concatenate(train_energy,axis=0)
         train_z = np.concatenate(train_z,axis=0)
-        train_labels = np.concatenate(train_labels,axis=0)
+        # train_labels = np.concatenate(train_labels,axis=0)
 
 
-        self.data_loader.dataset.mode="test"
-        test_energy = []
-        test_labels = []
-        test_z = []
-        for it, (input_data, labels) in enumerate(self.data_loader):
-            input_data = self.to_var(input_data)
-            enc, dec, z, gamma = self.dagmm(input_data)
-            sample_energy, cov_diag = self.dagmm.compute_energy(z, size_average=False)
-            test_energy.append(sample_energy.data.cpu().numpy())
-            test_z.append(z.data.cpu().numpy())
-            test_labels.append(labels.numpy())
-
-
-        test_energy = np.concatenate(test_energy,axis=0)
-        test_z = np.concatenate(test_z,axis=0)
-        test_labels = np.concatenate(test_labels,axis=0)
-
-        combined_energy = np.concatenate([train_energy, test_energy], axis=0)
-        combined_labels = np.concatenate([train_labels, test_labels], axis=0)
-
-        thresh = np.percentile(combined_energy, 100 - 20)
-        print("Threshold :", thresh)
-
-        pred = (test_energy > thresh).astype(int)
-        gt = test_labels.astype(int)
-
-        from sklearn.metrics import precision_recall_fscore_support as prf, accuracy_score
-
-        accuracy = accuracy_score(gt,pred)
-        precision, recall, f_score, support = prf(gt, pred, average='binary')
-
-        print("Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F-score : {:0.4f}".format(accuracy, precision, recall, f_score))
+        # self.data_loader.dataset.mode="test"
+        # test_energy = []
+        # test_labels = []
+        # test_z = []
+        # for it, (input_data, labels) in enumerate(self.data_loader):
+        #     input_data = self.to_var(input_data)
+        #     enc, dec, z, gamma = self.dagmm(input_data)
+        #     sample_energy, cov_diag = self.dagmm.compute_energy(z, size_average=False)
+        #     test_energy.append(sample_energy.data.cpu().numpy())
+        #     test_z.append(z.data.cpu().numpy())
+        #     test_labels.append(labels.numpy())
+        #
+        #
+        # test_energy = np.concatenate(test_energy,axis=0)
+        # test_z = np.concatenate(test_z,axis=0)
+        # test_labels = np.concatenate(test_labels,axis=0)
+        #
+        # combined_energy = np.concatenate([train_energy, test_energy], axis=0)
+        # combined_labels = np.concatenate([train_labels, test_labels], axis=0)
+        #
+        # thresh = np.percentile(combined_energy, 100 - 20)
+        # print("Threshold :", thresh)
+        #
+        # pred = (test_energy > thresh).astype(int)
+        # gt = test_labels.astype(int)
+        #
+        # from sklearn.metrics import precision_recall_fscore_support as prf, accuracy_score
+        #
+        # accuracy = accuracy_score(gt,pred)
+        # precision, recall, f_score, support = prf(gt, pred, average='binary')
+        #
+        # print("Accuracy : {:0.4f}, Precision : {:0.4f}, Recall : {:0.4f}, F-score : {:0.4f}".format(accuracy, precision, recall, f_score))
         
-        return accuracy, precision, recall, f_score
+        # return accuracy, precision, recall, f_score
+        return train_energy
