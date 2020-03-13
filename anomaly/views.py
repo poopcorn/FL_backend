@@ -10,9 +10,9 @@ from anomaly.metrics.auror import Auror
 from anomaly.metrics.sniper import Sniper
 from anomaly.metrics.dagmm import DAGMM
 
-# from backend.settings import JSON_PATH
+from backend.settings import JSON_PATH
 
-JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
+# JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
 
 # change layers paramaters from str to list
 def get_layer(str):
