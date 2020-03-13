@@ -8,10 +8,11 @@ from anomaly.metrics.zeno import Zeno
 from anomaly.metrics.fools import Fools
 from anomaly.metrics.auror import Auror
 from anomaly.metrics.sniper import Sniper
+from anomaly.metrics.dagmm import DAGMM
 
-from backend.settings import JSON_PATH
+# from backend.settings import JSON_PATH
 
-# JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
+JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
 
 # change layers paramaters from str to list
 def get_layer(str):
@@ -111,3 +112,12 @@ def sniper(request):
 
     sniper_obj = Sniper(gradients, p)
     return JsonResponse(sniper_obj.score(), safe=False)
+
+def dagmm(request):
+
+    layers = get_layer(request.GET.get('layers', -1))
+    gradients = get_grad(JSON_PATH, layers, -1)
+
+    dagmm_obj = DAGMM(gradients)
+    dagmm_obj.score()
+    return JsonResponse(['test'], safe=False)

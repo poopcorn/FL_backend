@@ -23,5 +23,6 @@ urlpatterns = [
     path('zeno/', views.zeno),
     path('foolsgold/', views.fools),
     path('auror/', views.auror),
-    path('sniper/', views.sniper)
+    path('sniper/', views.sniper),
+    path('dagmm', views.dagmm)
 ]
