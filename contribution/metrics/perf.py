@@ -8,6 +8,7 @@ class Perf:
     def score(self, contribution):
         keys = list(contribution.keys())
         max_val = abs(contribution[keys[0]][self.metric])
+
         for key in contribution:
             value = abs(contribution[key][self.metric])
             if value > max_val:

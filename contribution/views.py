@@ -2,9 +2,9 @@
 from django.http import JsonResponse
 import json
 
-from backend.settings import JSON_PATH
+# from backend.settings import JSON_PATH
 
-# JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
+JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
 
 from contribution.metrics.attention import Atten
 from contribution.metrics.perf import Perf
