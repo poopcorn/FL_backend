@@ -19,4 +19,5 @@ from contribution import views
 
 urlpatterns = [
     path('grad_diff/', views.attention),
+    path('perf_diff/', views.perf_diff)
 ]

@@ -2,11 +2,12 @@
 from django.http import JsonResponse
 import json
 
-# from backend.settings import JSON_PATH
+from backend.settings import JSON_PATH
 
-JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
+# JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/'
 
 from contribution.metrics.attention import Atten
+from contribution.metrics.perf import Perf
 
 # Create your views here.
 
@@ -58,6 +59,15 @@ def get_perf(path, round, stage):
 
     return data
 
+# get the contribution of a certain rouns
+def get_con(path, round):
+    file = open(path + 'contribution.json', 'r', encoding='utf-8')
+    data = json.load(file)
+    file.close()
+    data = data[round]['contribution']
+
+    return data
+
 
 def attention(request):
 
@@ -70,3 +80,12 @@ def attention(request):
     atten_obj = Atten(metric)
 
     return JsonResponse(atten_obj.score(gradients, avg_grad), safe=False)
+
+def perf_diff(request):
+
+    metric = request.GET.get('metric', 'accuracy')
+    contribution = get_con(JSON_PATH, -1)
+
+    perf_obj = Perf(metric)
+
+    return  JsonResponse(perf_obj.score(contribution), safe=False)
