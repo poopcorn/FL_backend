@@ -11,7 +11,6 @@ class Pca:
         index = list(map(int, grad.keys()))
         index.sort()
         index = list(map(str, index))
-        print(index)
         sorted_grad = []
         for i in range(len(index)):
             sorted_grad.append(grad[index[i]])

@@ -15,7 +15,11 @@ class Perf:
                 max_val = value
 
         score = {}
-        for key in contribution:
-            raw_value = contribution[key][self.metric]
-            score[key] = raw_value / max_val
+        if max_val != 0:
+            for key in contribution:
+                raw_value = contribution[key][self.metric]
+                score[key] = raw_value / max_val
+        else:
+            for key in contribution:
+                score[key] = contribution[key][self.metric]
         return score

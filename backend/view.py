@@ -4,32 +4,73 @@ import json
 
 
 from backend.settings import JSON_PATH
+from backend.settings import ROUND_EVERY_FILE
+from backend.file import File
 
-# PATH = '/home/zty_11621014/federated/models/gradients/'
-
-
-# def hello(request):
-#  return HttpResponse("Hello world!")
+# local test path
+# JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/iid_normal_35_35/'
 
 
 
 def performance(request):
+
+    round = int(request.GET.get('round', -1))
+
     file = open(JSON_PATH + 'performance.json', 'r', encoding='utf-8')
     data = json.load(file)
     file.close()
-    return JsonResponse(data,safe=False)
+
+    if round == -1:
+        performance = data
+    else:
+        performance = data[str(round)]
+
+    return JsonResponse(performance,safe=False)
 
 def client_grad(request):
-    file = open(JSON_PATH + 'gradients.json', 'r', encoding='utf-8')
+
+    round = int(request.GET.get('round', -1))
+
+    if round == -1:
+        file_obj = File(JSON_PATH + 'client_grad', 'gradients_')
+        filename = file_obj.latest_file(ROUND_EVERY_FILE)
+    else:
+        filename = 'gradients_' + \
+                   str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE) + '_' + \
+                   str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE + ROUND_EVERY_FILE - 1) + '.json'
+
+    file = open(JSON_PATH + 'client_grad/' + filename, 'r', encoding='utf-8')
     data = json.load(file)
     file.close()
-    return JsonResponse(data, safe=False)
+
+    if round == -1:
+        return JsonResponse({'round': int(list(data.keys())[-1]), 'data': data[list(data.keys())[-1]]}, safe=False)
+    else:
+        return JsonResponse(data[str(round)], safe=False)
+
+
 
 def avg_grad(request):
-    file = open(JSON_PATH + 'avg_grad.json', 'r', encoding='utf-8')
+
+    round = int(request.GET.get('round', -1))
+
+    if round == -1:
+        file_obj = File(JSON_PATH + 'avg_grad', 'avg_grad_')
+        filename = file_obj.latest_file(ROUND_EVERY_FILE)
+    else:
+        filename = 'avg_grad_' + \
+                   str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE) + '_' + \
+                   str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE + ROUND_EVERY_FILE - 1) + '.json'
+
+    file = open(JSON_PATH + 'avg_grad/' + filename, 'r', encoding='utf-8')
     data = json.load(file)
     file.close()
-    return JsonResponse(data, safe=False)
+
+    if round == -1:
+        return JsonResponse({'round': int(list(data.keys())[-1]), 'data': data[list(data.keys())[-1]]}, safe=False)
+    else:
+        return JsonResponse(data[str(round)], safe=False)
+
 
 
 

@@ -19,9 +19,9 @@ from . import view
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('performance', view.performance),
-    path('client_grad', view.client_grad),
-    path('avg_grad', view.avg_grad),
+    path('performance/', view.performance),
+    path('client_grad/', view.client_grad),
+    path('avg_grad/', view.avg_grad),
     path('anomaly/', include('anomaly.urls')),
     path('contribution/', include('contribution.urls'))
 ]

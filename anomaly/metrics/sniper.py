@@ -39,8 +39,6 @@ class Sniper:
                     max_clique = item
             tr += self.r
 
-        print(len(max_clique), max_clique)
-
         score = {}
         for key in self.grad:
             if int(key) in max_clique:
