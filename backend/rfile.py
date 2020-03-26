@@ -93,4 +93,5 @@ class RFile:
             filename = file_prefix + \
                        str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE) + '_' + \
                        str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE + ROUND_EVERY_FILE - 1) + '.json'
+            print(filename, (round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE + ROUND_EVERY_FILE - 1)
         return filename
