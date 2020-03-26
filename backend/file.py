@@ -13,4 +13,5 @@ class File:
             files[i] = files[i].strip('.json')
             files[i] = int(files[i].split('_')[0])
         files = sorted(files)
-        return self.prefix + str(files[-1]) + '_' + str(files[-1] * round_every_file + round_every_file - 1) + '.json'
+        return self.prefix + str(files[-1]) + '_' + \
+               str((int(files[-1]) // round_every_file) * round_every_file + round_every_file - 1) + '.json'
