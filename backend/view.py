@@ -7,14 +7,12 @@ from backend.settings import JSON_PATH
 from backend.settings import ROUND_EVERY_FILE
 from backend.file import File
 
-# local test path
-# JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/test/iid_normal_35_35/'
-
 
 
 def performance(request):
 
     round = int(request.GET.get('round', -1))
+    num = int(request.GET.get('number', 1))
 
     file = open(JSON_PATH + 'performance.json', 'r', encoding='utf-8')
     data = json.load(file)
@@ -22,10 +20,14 @@ def performance(request):
 
     if round == -1:
         performance = data
-    else:
+    elif num == 1:
         performance = data[str(round)]
+    else:
+        performance = {}
+        for i in range(round - num + 1, round + 1):
+            performance[str(i)] = data[str(i)]
 
-    return JsonResponse(performance,safe=False)
+    return JsonResponse(performance, safe=False)
 
 def client_grad(request):
 
