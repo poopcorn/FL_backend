@@ -74,6 +74,37 @@ def avg_grad(request):
         return JsonResponse(data[str(round)], safe=False)
 
 
+def trained_clients(request):
+
+    round = int(request.GET.get('round', -1))
+    num = int(request.GET.get('number', -1))
+
+
+    if round == -1 or num == -1:
+        return JsonResponse('Wrong Parameters', safe=False)
+
+
+    files = []
+    cur_round = round - num + 1
+    while cur_round <= round:
+        filename = 'gradients_' + \
+               str((cur_round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE) + '_' + \
+               str((cur_round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE + ROUND_EVERY_FILE - 1) + '.json'
+        files.append(filename)
+        cur_round = (cur_round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE + ROUND_EVERY_FILE
+
+    clients = {}
+    for filename in files:
+        file = open(JSON_PATH + 'client_grad/' + filename, 'r', encoding='utf-8')
+        data = json.load(file)
+        file.close()
+        for key in data:
+            if round - num + 1 <= int(key) <= round:
+                clients[key] = list(map(int, list(data[key].keys())))
+
+    return JsonResponse(clients, safe=False)
+
+
 
 
 
