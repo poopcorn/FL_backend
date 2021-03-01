@@ -13,6 +13,7 @@ class RFile:
 
     # change layers paramaters from str to list
     def get_layer(self, string):
+        print(string)
         if string == -1:
             layers = 'conv1'
         else:
@@ -42,13 +43,10 @@ class RFile:
             round = list(data.keys())[-1]
         data = data[str(round)]
 
-        print(layer, type(layer))
-
         # get gradients of all clients
         vec = {}
         for key in data:
             vec[key] = data[key][layer]
-        print(vec['21'])
         return {'round': int(round), 'data': vec}
 
     # get the performance of a certain round
