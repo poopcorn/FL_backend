@@ -125,4 +125,4 @@ class RFile:
                     vec2.append(gradient[i][j][k])
                 vec1.append(vec2)
             data.append(vec1)
-        return data
+        return data, l4

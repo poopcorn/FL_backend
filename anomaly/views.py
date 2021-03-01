@@ -52,8 +52,8 @@ def fools(request):
 
     data = []
     for key in gradients:
-        gradients[key] = rfile.extract_grad(gradients[key])
-    for i in range(len(gradients)):
+        gradients[key], length = rfile.extract_grad(gradients[key])
+    for i in range(length):
         one_data = {}
         for key in gradients:
             one_data[key] = np.array(gradients[key][i]).flatten().tolist()
