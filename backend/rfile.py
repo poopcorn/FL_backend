@@ -87,9 +87,7 @@ class RFile:
             round = list(data.keys())[-1]
         data = data[str(round)]
 
-        vec = []
-        for item in layers:
-            vec += data[item]
+        vec = data[layers]
         return {'round': int(round), 'data': vec}
 
     def get_filename(self, round, dir_name, file_prefix):
@@ -136,6 +134,13 @@ class RFile:
             for key in gradient:
                 one_data[key] = np.array(gradient[key][i]).flatten().tolist()
             data.append(one_data)
+        return data
+
+    def reshape_avg_grad(self, gradient):
+        data = []
+        gradient, length = self.extract_grad(gradient)
+        for i in range(length):
+            data.append(np.array(gradient[i]).flatten().tolist())
         return data
 
     def avg_score(self, scores):

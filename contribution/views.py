@@ -22,12 +22,20 @@ def attention(request):
     result = rfile.get_grad(JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
+    data = rfile.reshape_grad(gradients)
+
 
     avg_grad = rfile.get_avg_grad(JSON_PATH, layers, round - 1)['data']
+    avg_data = rfile.reshape_avg_grad(avg_grad)
 
     atten_obj = Atten(metric)
 
-    return JsonResponse({'round': round, 'data': atten_obj.score(gradients, avg_grad)}, safe=False)
+    scores = []
+    for i in range(len(data)):
+        scores.append(atten_obj.score(data[i], avg_data[i]))
+    score = rfile.avg_score(scores)
+
+    return JsonResponse({'round': round, 'data': score}, safe=False)
 
 def perf_diff(request):
 
