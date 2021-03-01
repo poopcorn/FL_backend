@@ -51,7 +51,7 @@ def fools(request):
 
     data = []
     c_ids = list(gradients.keys())
-    return JsonResponse(len(gradients[c_ids[0]]), safe=False)
+    return JsonResponse(gradients[c_ids[0]], safe=False)
 
 
     # fools_obj = Fools(k)
