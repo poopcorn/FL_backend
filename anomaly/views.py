@@ -49,7 +49,6 @@ def fools(request):
     result = rfile.get_grad(JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
-
     data = rfile.reshape_grad(gradients)
 
 
