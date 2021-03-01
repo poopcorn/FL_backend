@@ -26,6 +26,6 @@ urlpatterns = [
     path('weight/', view.weight),
     path('anomaly/', include('anomaly.urls')),
     path('contribution/', include('contribution.urls')),
-    path('one_round_metrics/', view.one_round_metric),
-    path('all_round_metrics/', view.get_all_round_metric)
+    # path('one_round_metrics/', view.one_round_metric),
+    # path('all_round_metrics/', view.get_all_round_metric)
 ]
