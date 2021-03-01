@@ -7,8 +7,6 @@ class Zeno:
 
     def score(self, perf_this, perf_last, grad_this, grad_last):
 
-        print('hello')
-
         res = {}
         for key in perf_this:
             res[key] = perf_last[key]['loss'] - perf_this[key]['loss'] - \

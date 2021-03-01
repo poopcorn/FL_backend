@@ -1,12 +1,12 @@
 from django.http import HttpResponse
 from django.http import JsonResponse
 import json
-
+import pickle as pkl
 
 from backend.settings import JSON_PATH
 from backend.settings import ROUND_EVERY_FILE
 from backend.file import File
-
+from heatmap import getOneRound, rfile
 
 
 def performance(request):
@@ -105,6 +105,15 @@ def trained_clients(request):
     return JsonResponse(clients, safe=False)
 
 
+def one_round_metric(request):
+    round = int(request.GET.get('round', -1))
+    layers = rfile.get_layer(request.GET.getlist('layers[]', []))
+    res = getOneRound(round, layers)
+    return JsonResponse(res, safe=False)
 
 
-
+with open('data/dense_metrics.pkl', 'rb') as fp:
+    Dense_Metric = pkl.load(fp)
+def get_all_round_metric(request):
+    layers = rfile.get_layer(request.GET.getlist('layers[]', []))
+    return JsonResponse({'res': Dense_Metric}, safe=False)

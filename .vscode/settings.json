@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/home/zty_11621014/miniconda3/envs/backend/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
+}

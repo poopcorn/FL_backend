@@ -10,14 +10,16 @@ class RFile:
         self.JSON_PATH = path
 
     # change layers paramaters from str to list
-    def get_layer(self, str):
-        if str == -1:
-            layers = ['dense']
-        else:
-            layers = str[1: len(str) - 1]
+    def get_layer(self, string):
+        if isinstance(string, str):
+            layers = str[1: len(string) - 1]
             layers = layers.split(',')
             for i in range(len(layers)):
                 layers[i] = layers[i][1: len(layers[i]) - 1]
+        elif isinstance(str, list):
+            layers = string
+        else:
+            layers = ['dense']
         return layers
 
     # determine gradients from which layers should be used
