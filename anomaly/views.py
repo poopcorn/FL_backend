@@ -56,15 +56,7 @@ def fools(request):
     scores = []
     for i in range(len(data)):
         scores.append(fools_obj.score(data[i]))
-
-    score = {}
-    for key in scores[0]:
-        score[key] = 0
-        for i in range(len(scores)):
-            score[key] += scores[i][key]
-        score[key] = score[key] / len(scores)
-
-
+    score = rfile.avg_score(scores)
 
     return JsonResponse({'round': round, 'data': score}, safe=False)
 

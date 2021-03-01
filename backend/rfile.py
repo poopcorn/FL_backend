@@ -137,3 +137,12 @@ class RFile:
                 one_data[key] = np.array(gradient[key][i]).flatten().tolist()
             data.append(one_data)
         return data
+
+    def avg_score(self, scores):
+        score = {}
+        for key in scores[0]:
+            score[key] = 0
+            for i in range(len(scores)):
+                score[key] += scores[i][key]
+            score[key] = score[key] / len(scores)
+        return score
