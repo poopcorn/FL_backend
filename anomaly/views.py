@@ -51,12 +51,22 @@ def fools(request):
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
 
+    fools_obj = Fools(k)
 
-    return JsonResponse(data[0], safe=False)
+    scores = []
+    for i in range(len(data)):
+        scores.append(fools_obj.score(data[i]))
+
+    score = {}
+    for key in scores[0]:
+        score[key] = 0
+        for i in range(len(scores)):
+            score[key] += scores[i][key]
+        score[key] = score[key] / len(scores)
 
 
-    # fools_obj = Fools(k)
-    # return JsonResponse({'round': round, 'data': fools_obj.score(gradients)}, safe=False)
+
+    return JsonResponse({'round': round, 'data': score}, safe=False)
 
 def zeno(request):
 

@@ -13,7 +13,6 @@ class RFile:
 
     # change layers paramaters from str to list
     def get_layer(self, string):
-        print(string)
         if string == -1:
             layers = 'conv1'
         else:
