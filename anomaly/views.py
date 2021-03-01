@@ -94,9 +94,16 @@ def auror(request):
     result = rfile.get_grad(JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
+    data = rfile.reshape_grad(gradients)
 
     auror_obj = Auror(k)
-    return JsonResponse({'round': round, 'data': auror_obj.score(gradients)}, safe=False)
+
+    scores = []
+    for i in range(len(data)):
+        scores.append(auror_obj.score(data[i]))
+    score = rfile.avg_score(scores)
+
+    return JsonResponse({'round': round, 'data': score}, safe=False)
 
 def sniper(request):
 
