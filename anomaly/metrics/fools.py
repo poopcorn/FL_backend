@@ -30,5 +30,8 @@ class Fools:
         max_val = max(score.values())
         min_val = min(score.values())
         for key in score:
-            score[key] = 1 - (score[key] - min_val) / (max_val - min_val)
+            if max_val - min_val == 0:
+                score[key] = 0
+            else:
+                score[key] = 1 - (score[key] - min_val) / (max_val - min_val)
         return score
