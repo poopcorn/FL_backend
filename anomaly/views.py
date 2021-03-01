@@ -15,19 +15,19 @@ from backend.settings import JSON_PATH
 
 # Create your views here.
 
-def krum(request):
-
-    rfile = RFile(JSON_PATH)
-
-    k = int(request.GET.get('k', -1))
-    round = int(request.GET.get('round', -1))
-    layers = rfile.get_layer(request.GET.get('layers', -1))
-
-    result = rfile.get_grad(JSON_PATH, layers, round)
-    round = result['round']
-    gradients = result['data']
-    krum_obj = Krum(k)
-    return JsonResponse({'round': round, 'data': krum_obj.get_score(gradients)}, safe=False)
+# def krum(request):
+#
+#     rfile = RFile(JSON_PATH)
+#
+#     k = int(request.GET.get('k', -1))
+#     round = int(request.GET.get('round', -1))
+#     layers = rfile.get_layer(request.GET.get('layers', -1))
+#
+#     result = rfile.get_grad(JSON_PATH, layers, round)
+#     round = result['round']
+#     gradients = result['data']
+#     krum_obj = Krum(k)
+#     return JsonResponse({'round': round, 'data': krum_obj.get_score(gradients)}, safe=False)
 
 # def geo_med(request):
 #
@@ -48,9 +48,11 @@ def fools(request):
     result = rfile.get_grad(JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
+    return JsonResponse(gradients, safe=False)
 
-    fools_obj = Fools(k)
-    return JsonResponse({'round': round, 'data': fools_obj.score(gradients)}, safe=False)
+
+    # fools_obj = Fools(k)
+    # return JsonResponse({'round': round, 'data': fools_obj.score(gradients)}, safe=False)
 
 def zeno(request):
 

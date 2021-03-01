@@ -23,7 +23,7 @@ class RFile:
         return layers
 
     # determine gradients from which layers should be used
-    def get_grad(self, path, layers, round):
+    def get_grad(self, path, layer, round):
 
         filename = self.get_filename(round, 'client_grad', 'gradients_')
 
@@ -38,9 +38,7 @@ class RFile:
         # get gradients of all clients
         vec = {}
         for key in data:
-            vec[key] = []
-            for item in layers:
-                vec[key] += data[key][item]
+            vec[key] = data[key][layer]
         return {'round': int(round), 'data': vec}
 
     # get the performance of a certain round

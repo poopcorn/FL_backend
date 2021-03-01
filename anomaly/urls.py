@@ -18,10 +18,10 @@ from django.urls import path
 from anomaly import views
 
 urlpatterns = [
-    path('krum/',views.krum),
+    # path('krum/',views.krum),
     # path('med/',views.geo_med),
     path('zeno/', views.zeno),
-    path('foolsgold/', views.fools),
+    path('krum/', views.fools),
     path('auror/', views.auror),
     path('sniper/', views.sniper),
     # path('dagmm', views.dagmm)

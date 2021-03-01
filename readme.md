@@ -241,7 +241,7 @@
 
 - 计算最新一轮各个client的异常分数
 - 基于client gradient之间的距离计算：对每个client，计算其KNN范围内的gradient距离均值
-- 使用欧氏距离
+- 使用cos距离
 - 分数越大越异常
 
 **请求URL：** 
@@ -279,31 +279,9 @@
 | key      | str   | client id     |
 | value    | float | anomaly score |
 
-### 2.FoolsGold方法
-
-**简要描述：** 
-
-- 同Krum方法
-- 使用cos距离
-- 分数越大越异常
 
 
-**请求URL：** 
-- ` http://10.76.2.232:8000/anomaly/foolsgold/ `
-  
-
-**请求方式：**
-- GET
-
-**参数：** 
-
-| 参数名 | 必选 | 类型 | 说明                                                         |
-| :----- | :--- | :--- | ------------------------------------------------------------ |
-| round      | 否   | int  | 请求第几轮训练的数据，默认返回目前最新一轮的数据  
-| k      | 是   | int  | knn的k                                                       |
-| layers | 否   | list | 需要用哪些layer的梯度计算异常值，例如: ['conv1', 'conv2', 'dense']，默认值为['dense'] |
-
-### 3.Zeno方法
+### 2.Zeno方法
 
 **简要描述：** 
 
@@ -326,7 +304,7 @@
 | round      | 否   | int  | 请求第几轮训练的数据，默认返回目前最新一轮的数据  
 | p      | 是   | int  | 梯度在计算分值时所占的比重，在FEMNIST的case中建议选100 |
 
-### 4.Auror方法
+### 3.Auror方法
 
 **简要描述：** 
 
@@ -351,7 +329,7 @@
 | k      | 是   | int  | kmeans的k                                                    |
 | layers | 否   | list | 需要用哪些layer的梯度计算异常值，例如: ['conv1', 'conv2', 'dense']，默认值为['dense'] |
 
-### 5.Sniper方法
+### 4.Sniper方法
 
 **简要描述：** 
 
@@ -375,7 +353,7 @@
 | p      | 是   | float | 所求的maximum clique至少要包含的client数量占client总数的占比，推荐0.8及以上 |
 | layers | 否   | list  | 需要用哪些layer的梯度计算异常值，例如: ['conv1', 'conv2', 'dense']，默认值为['dense'] |
 
-### 6.PCA方法
+### 5.PCA方法
 
 **简要描述：** 
 
