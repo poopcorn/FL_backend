@@ -15,7 +15,7 @@ def attention(request):
 
     rfile = RFile(JSON_PATH)
 
-    metric = request.GET.get('metric', 'eu')
+    metric = request.GET.get('metric', 'cos')
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
 
