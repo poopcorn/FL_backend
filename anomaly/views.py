@@ -147,6 +147,13 @@ def pca(request):
     result = rfile.get_grad(JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
+    data = rfile.reshape_grad(gradients)
 
     pca_ojb = Pca(k)
-    return JsonResponse({'round': round, 'data': pca_ojb.score(gradients)}, safe=False)
+
+    scores = []
+    for i in range(len(data)):
+        scores.append(pca_ojb.score(data[i]))
+    score = rfile.avg_score(scores)
+
+    return JsonResponse({'round': round, 'data': score}, safe=False)
