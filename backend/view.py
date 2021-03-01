@@ -104,16 +104,26 @@ def trained_clients(request):
 
     return JsonResponse(clients, safe=False)
 
+def weight(request):
 
-def one_round_metric(request):
-    round = int(request.GET.get('round', -1))
-    layers = rfile.get_layer(request.GET.getlist('layers[]', []))
-    res = getOneRound(round, layers)
-    return JsonResponse(res, safe=False)
+    file = open(JSON_PATH + 'weight.json', 'r', encoding='utf-8')
+    data = json.load(file)
+    file.close()
+
+    return JsonResponse(data, safe=False)
 
 
-with open('data/dense_metrics.pkl', 'rb') as fp:
-    Dense_Metric = pkl.load(fp)
-def get_all_round_metric(request):
-    layers = rfile.get_layer(request.GET.getlist('layers[]', []))
-    return JsonResponse({'res': Dense_Metric}, safe=False)
+# def one_round_metric(request):
+#     round = int(request.GET.get('round', -1))
+#     layers = rfile.get_layer(request.GET.getlist('layers[]', []))
+#     res = getOneRound(round, layers)
+#     return JsonResponse(res, safe=False)
+#
+#
+# with open('data/dense_metrics.pkl', 'rb') as fp:
+#     Dense_Metric = pkl.load(fp)
+#
+#
+# def get_all_round_metric(request):
+#     layers = rfile.get_layer(request.GET.getlist('layers[]', []))
+#     return JsonResponse({'res': Dense_Metric}, safe=False)

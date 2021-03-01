@@ -23,6 +23,7 @@ urlpatterns = [
     path('client_grad/', view.client_grad),
     path('avg_grad/', view.avg_grad),
     path('trained_clients/', view.trained_clients),
+    path('weight/', view.weight),
     path('anomaly/', include('anomaly.urls')),
     path('contribution/', include('contribution.urls')),
     path('one_round_metrics/', view.one_round_metric),

@@ -125,6 +125,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-JSON_PATH = '/home/zty_11621014/federated/models/gradients/iid_normal/'
+JSON_PATH = '/home/zty_11621014/federated/data/experiments/label_flip_case/'
 ROUND_EVERY_FILE = 10
 # JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/process/iid_normal_35_35/'
