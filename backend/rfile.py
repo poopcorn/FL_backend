@@ -126,3 +126,14 @@ class RFile:
                 vec1.append(vec2)
             data.append(vec1)
         return data, l4
+
+    def reshape_grad(self, gradient):
+        data = []
+        for key in gradient:
+            gradient[key], length = self.extract_grad(gradient[key])
+        for i in range(length):
+            one_data = {}
+            for key in gradient:
+                one_data[key] = np.array(gradient[key][i]).flatten().tolist()
+            data.append(one_data)
+        return data
