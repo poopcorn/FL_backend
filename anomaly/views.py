@@ -10,6 +10,7 @@ from anomaly.metrics.pca import Pca
 from backend.rfile import RFile
 
 from backend.settings import JSON_PATH
+import numpy as np
 
 
 
@@ -50,7 +51,12 @@ def fools(request):
     gradients = result['data']
 
     data = []
+    for key in gradients:
+        gradients[key] = rfile.extract_grad(gradients[key])
+
     c_ids = list(gradients.keys())
+
+
     return JsonResponse(gradients[c_ids[0]], safe=False)
 
 

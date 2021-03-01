@@ -99,3 +99,28 @@ class RFile:
                        str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE) + '_' + \
                        str((round // ROUND_EVERY_FILE) * ROUND_EVERY_FILE + ROUND_EVERY_FILE - 1) + '.json'
         return filename
+
+    def extract_grad(self, gradient):
+        data = []
+
+        l1 = len(gradient)
+        l2 = len(gradient[0])
+        l3 = len(gradient[0][0])
+        l4 = len(gradient[0][0][0])
+        for i in range(l1):
+            for j in range(l2):
+                vec = np.array(gradient[i][j][0])
+                for k in range(1, l3):
+                    vec += np.array(gradient[i][j][k])
+                vec = vec / l3
+                gradient[i][j] = vec.tolist()
+
+        for k in range(l4):
+            vec1 = []
+            for i in range(l1):
+                vec2 = []
+                for j in range(l2):
+                    vec2.append(gradient[i][j][k])
+                vec1.append(vec2)
+            data.append(vec1)
+        return data
