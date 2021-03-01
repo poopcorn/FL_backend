@@ -67,14 +67,15 @@ def zeno(request):
     # suggest p = 100
     p = float(request.GET.get('p', -1))
     round = int(request.GET.get('round', -1))
+    layers = rfile.get_layer(request.GET.get('layers', -1))
 
     latest_result = rfile.get_perf(JSON_PATH, round, 'train')
     latest_round = latest_result['round']
     latest_perf = latest_result['data']
     former_perf = rfile.get_perf(JSON_PATH, latest_round - 1, 'train')['data']
 
-    latest_grad = rfile.get_grad(JSON_PATH, ['dense'], latest_round)['data']
-    former_grad = rfile.get_grad(JSON_PATH, ['dense'], latest_round - 1)['data']
+    latest_grad = rfile.get_grad(JSON_PATH, layers, latest_round)['data']
+    former_grad = rfile.get_grad(JSON_PATH, layers, latest_round - 1)['data']
 
     zeno_obj = Zeno(p)
 
