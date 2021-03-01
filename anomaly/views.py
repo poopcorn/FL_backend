@@ -116,9 +116,16 @@ def sniper(request):
     result = rfile.get_grad(JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
+    data = rfile.reshape_grad(gradients)
 
-    sniper_obj = Sniper(gradients, p)
-    return JsonResponse({'round': round, 'data': sniper_obj.score()}, safe=False)
+    sniper_obj = Sniper(p)
+
+    scores = []
+    for i in range(len(data)):
+        scores.append(sniper_obj.score(data[i]))
+    score = rfile.avg_score(scores)
+
+    return JsonResponse({'round': round, 'data': score}, safe=False)
 
 # def dagmm(request):
 #

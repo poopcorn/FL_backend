@@ -3,23 +3,22 @@ import numpy as np
 
 class Sniper:
 
-    def __init__(self, grad, prop):
+    def __init__(self, prop):
         self.y = 0.5
         self.r = 0.05
-        self.grad = grad
         self.graph = nx.Graph()
         self.proportion = prop
 
-    def score(self):
+    def score(self, grad):
 
-        nodes = [int(k) for k in list(self.grad.keys())]
+        nodes = [int(k) for k in list(grad.keys())]
         self.graph.add_nodes_from(nodes)
 
-        length = len(self.grad)
+        length = len(grad)
         distance_matrix = np.zeros([length, length])
         for i in range(length):
             for j in range(i + 1, length):
-                distance_matrix[i][j] = np.sqrt(np.sum(np.square(np.asarray(self.grad[str(i)]) - np.asarray(self.grad[str(j)]))))
+                distance_matrix[i][j] = np.sqrt(np.sum(np.square(np.asarray(grad[str(i)]) - np.asarray(grad[str(j)]))))
 
         max_val = distance_matrix.max()
         min_val = distance_matrix.min()
@@ -40,7 +39,7 @@ class Sniper:
             tr += self.r
 
         score = {}
-        for key in self.grad:
+        for key in grad:
             if int(key) in max_clique:
                 score[key] = 0
             else:
