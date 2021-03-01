@@ -11,16 +11,21 @@ class RFile:
 
     # change layers paramaters from str to list
     def get_layer(self, string):
-        if isinstance(string, str):
-            layers = str[1: len(string) - 1]
-            layers = layers.split(',')
-            for i in range(len(layers)):
-                layers[i] = layers[i][1: len(layers[i]) - 1]
-        elif isinstance(str, list):
-            layers = string
+        if string == -1:
+            layers = 'conv1'
         else:
-            layers = ['dense']
+            layers = string
         return layers
+        # if isinstance(string, str):
+        #     layers = str[1: len(string) - 1]
+        #     layers = layers.split(',')
+        #     for i in range(len(layers)):
+        #         layers[i] = layers[i][1: len(layers[i]) - 1]
+        # elif isinstance(str, list):
+        #     layers = string
+        # else:
+        #     layers = ['dense']
+        # return layers
 
     # determine gradients from which layers should be used
     def get_grad(self, path, layer, round):
