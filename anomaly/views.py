@@ -44,12 +44,14 @@ def fools(request):
     k = int(request.GET.get('k', -1))
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
-    print(layers)
 
     result = rfile.get_grad(JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
-    return JsonResponse(gradients, safe=False)
+
+    data = []
+    c_ids = list(gradients.keys())
+    return JsonResponse(len(gradients[c_ids[0]]), safe=False)
 
 
     # fools_obj = Fools(k)
