@@ -66,7 +66,7 @@ def fools(request):
 
 
 
-    return JsonResponse({'round': round, 'data': score}, safe=False)
+    return JsonResponse({'round': round, 'data': scores}, safe=False)
 
 def zeno(request):
 
