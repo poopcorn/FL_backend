@@ -53,11 +53,15 @@ def fools(request):
     data = []
     for key in gradients:
         gradients[key] = rfile.extract_grad(gradients[key])
+    for i in range(len(gradients)):
+        one_data = {}
+        for key in gradients:
+            one_data[key] = np.array(gradients[key][i]).flatten().tolist()
+        data.append(one_data)
 
-    c_ids = list(gradients.keys())
 
 
-    return JsonResponse(gradients[c_ids[0]], safe=False)
+    return JsonResponse(data[0], safe=False)
 
 
     # fools_obj = Fools(k)
