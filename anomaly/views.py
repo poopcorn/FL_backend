@@ -75,11 +75,18 @@ def zeno(request):
     former_perf = rfile.get_perf(JSON_PATH, latest_round - 1, 'train')['data']
 
     latest_grad = rfile.get_grad(JSON_PATH, layers, latest_round)['data']
+    reshape_latest_grad = rfile.reshape_grad(latest_grad)
     former_grad = rfile.get_grad(JSON_PATH, layers, latest_round - 1)['data']
+    reshape_former_grad = rfile.reshape_grad(former_grad)
 
     zeno_obj = Zeno(p)
 
-    return JsonResponse({'round': latest_round, 'data': zeno_obj.score(latest_perf, former_perf, latest_grad, former_grad)}, safe=False)
+    scores = []
+    for i in range(len(reshape_latest_grad)):
+        scores.append(zeno_obj.score(latest_perf, former_perf, reshape_latest_grad[i], reshape_former_grad[i]))
+    score = rfile.avg_score(scores)
+
+    return JsonResponse({'round': latest_round, 'data': score}, safe=False)
 
 
 
