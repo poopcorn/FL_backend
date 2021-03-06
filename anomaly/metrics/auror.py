@@ -12,7 +12,6 @@ class Auror:
         kmeans = KMeans(n_clusters=self.k, random_state=0).fit(input)
         labels = kmeans.labels_
         centers = kmeans.cluster_centers_
-        print(centers)
 
         score = {}
         i = 0
@@ -23,7 +22,7 @@ class Auror:
 
         max_val = max(score.values())
         min_val = min(score.values())
-        print(max_val - min_val)
+        print(score)
         for key in score:
             score[key] = (score[key] - min_val) / (max_val - min_val)
 
