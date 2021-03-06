@@ -159,9 +159,9 @@ def pca(request):
     pca_ojb = Pca(k)
 
     scores = []
-    for i in range(len(data)):
-        scores.append(pca_ojb.score(data[i]))
-    score = rfile.avg_score(scores)
-    print(scores[11])
+    # for i in range(len(data)):
+    #     scores.append(pca_ojb.score(data[i]))
+    # score = rfile.avg_score(scores)
+    score = rfile.avg_score(scores[11])
 
     return JsonResponse({'round': round, 'data': score}, safe=False)

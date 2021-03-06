@@ -22,6 +22,7 @@ class Pca:
         eigen_vectors = pca.components_
         trans_grad = pca.fit_transform(sorted_grad)
 
+
         reconstruct_grad = []
         for i in range(len(trans_grad)):
             res = np.zeros(len(eigen_vectors[0]))
@@ -30,6 +31,8 @@ class Pca:
             reconstruct_grad.append(list(res))
 
         reconstruct_grad = np.asarray(reconstruct_grad)
+
+        print(reconstruct_grad)
 
         score = {}
         for i in range(len(sorted_grad)):
