@@ -1,3 +1,4 @@
+import os
 import json
 import pickle
 import math
@@ -18,8 +19,9 @@ from contribution.metrics.attention import Atten
 from contribution.metrics.perf import Perf
 
 
+# READ RFILE
 rfile = RFile(JSON_PATH)
-krum_obj = Krum(-1)
+sniper_obj = Sniper(0.8)
 fools_obj = Fools(-1)
 auror_obj = Auror(5)
 zeno_obj = Zeno(100)
@@ -28,37 +30,96 @@ atten_eu_obj = Atten('eu')
 atten_cos_obj = Atten('cos')
 perf_a_obj = Perf('accuracy')
 perf_l_obj = Perf('loss')
+
+# LOAD CLIENT DATA
+conv1AllRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')
+allRoundRes = {
+    'conv1': [],
+    'conv2': []
+}
+if os.path.exists(conv1AllRoundFile):
+    with open(conv1AllRoundFile, 'rb') as fp:
+        allRoundRes['conv1'] = pickle.load(fp)
+        fp.close()
+
+def getOneRoundFromFile(curRound, layer):
+    if curRound < 500 and curRound > 2:
+        if layer == 'conv1':
+            return allRoundRes['conv1'][curRound]
+        else:
+            pass
+    return getOneRound(curRound, layer)
+
+
 def getOneRound(round, layers):
     # Anomaly Metrics
     result = rfile.get_grad(JSON_PATH, layers, round)
     after_round = result['round']
     gradients = result['data']
-    avg_grad = rfile.get_avg_grad(JSON_PATH, layers, max(1, after_round - 1))['data']
-    krum_res = krum_obj.get_score(gradients)
-    fools_res = fools_obj.score(gradients)
-    auror_res = auror_obj.score(gradients)
-    sniper_res = Sniper(gradients, 0.8).score()
-    pca_res = pca_obj.score(gradients)
+    data = rfile.reshape_grad(gradients)
 
+    # krum --> fools
+    krum_scores = []
+    for i in range(len(data)):
+        krum_scores.append(fools_obj.score(data[i]))
+    krum_res = rfile.avg_score(krum_scores)
+ 
+    # auror
+    auror_scores = []
+    for i in range(len(data)):
+        auror_scores.append(auror_obj.score(data[i]))
+    auror_res = rfile.avg_score(auror_scores)
+
+    # sniper
+    sniper_scores = []
+    for i in range(len(data)):
+        sniper_scores.append(sniper_obj.score(data[i]))
+    sniper_res = rfile.avg_score(sniper_scores)
+
+    # pca
+    pca_scores = []
+    for i in range(len(data)):
+        pca_scores.append(pca_obj.score(data[i]))
+    pca_res = rfile.avg_score(pca_scores)
+
+    # zeno
     latest_result = rfile.get_perf(JSON_PATH, round, 'train')
     latest_round = latest_result['round']
     latest_perf = latest_result['data']
-    former_perf = rfile.get_perf(JSON_PATH, max(1, latest_round - 1), 'train')['data']
+    former_perf = rfile.get_perf(JSON_PATH, latest_round - 1, 'train')['data']
 
-    latest_grad = rfile.get_grad(JSON_PATH, ['dense'], latest_round)['data']
-    former_grad = rfile.get_grad(JSON_PATH, ['dense'], max(1, latest_round - 1))['data']
-    zeno_res = zeno_obj.score(latest_perf, former_perf, latest_grad, former_grad)
+    latest_grad = rfile.get_grad(JSON_PATH, layers, latest_round)['data']
+    reshape_latest_grad = rfile.reshape_grad(latest_grad)
+    former_grad = rfile.get_grad(JSON_PATH, layers, latest_round - 1)['data']
+    reshape_former_grad = rfile.reshape_grad(former_grad)
+
+    zeno_scores = []
+    for i in range(len(reshape_latest_grad)):
+        zeno_scores.append(zeno_obj.score(latest_perf, former_perf, reshape_latest_grad[i], reshape_former_grad[i]))
+    zeno_res = rfile.avg_score(zeno_scores)
 
     # Contribution Metrics
-    atten_eu_res = atten_eu_obj.score(gradients, avg_grad)
-    atten_cos_res = atten_cos_obj.score(gradients, avg_grad)
+    avg_grad = rfile.get_avg_grad(JSON_PATH, layers, round - 1)['data']
+    avg_data = rfile.reshape_avg_grad(avg_grad)
+
+    # attention
+    atten_eu_scores = []
+    for i in range(len(data)):
+        atten_eu_scores.append(atten_eu_obj.score(data[i], avg_data[i]))
+    atten_eu_res = rfile.avg_score(atten_eu_scores)
+
+    atten_cos_scores = []
+    for i in range(len(data)):
+        atten_cos_scores.append(atten_cos_obj.score(data[i], avg_data[i]))
+    atten_cos_res = rfile.avg_score(atten_cos_scores)
+
+    # perf diff
     no_layer_result = rfile.get_con(JSON_PATH, round)
     contribution = no_layer_result['data']
     perf_a_res = perf_a_obj.score(contribution)
     perf_l_res = perf_l_obj.score(contribution)
     # res = {
     #     'Krum': krum_res,
-    #     'FoolsGold': fools_res,
     #     'Zeno': zeno_res,
     #     'Auror': auror_res,
     #     'Sniper': sniper_res,
@@ -68,7 +129,7 @@ def getOneRound(round, layers):
     #     'accuracy': perf_a_res,
     #     'loss': perf_l_res
     # }
-    res = [krum_res, fools_res, zeno_res, auror_res, sniper_res, pca_res, atten_eu_res, atten_cos_res, perf_a_res, perf_l_res]
+    res = [krum_res, zeno_res, auror_res, sniper_res, pca_res, atten_eu_res, atten_cos_res, perf_a_res, perf_l_res]
     return res
 
 def get_all_round():
@@ -92,3 +153,24 @@ def get_all_round():
         json.dump(res, fp)
     with open('data/dense_metrics.pkl', 'wb') as fp:
         pickle.dump(res, fp)
+
+# getOneRound(100, 'conv1')
+
+def saveOneRound(roundNum, layer):
+    path = 'data/{}_{}.pkl'.format(roundNum, layer)
+    if os.path.exists(path):
+        print('file {path} has already saved!')
+        return
+    res = [[], []]
+    for i in range(2, roundNum):
+        print(i)
+        res.append(getOneRound(i, layer))
+    with open(path, 'wb') as fp:
+        pickle.dump(res, fp)
+        fp.close()
+
+
+# saveOneRound(500, 'conv2')
+# allRoundFile = 'data/{}_{}.pkl'.format(3, 'conv1')
+# with open(allRoundFile, 'rb') as fp:
+#     allRoundRes = pickle.load(fp)

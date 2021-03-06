@@ -6,7 +6,8 @@ import pickle as pkl
 from backend.settings import JSON_PATH
 from backend.settings import ROUND_EVERY_FILE
 from backend.file import File
-from heatmap import getOneRound, rfile
+from heatmap import getOneRound, getOneRoundFromFile, rfile
+from feature import getRoundGrad
 
 
 def performance(request):
@@ -29,6 +30,10 @@ def performance(request):
 
     return JsonResponse(performance, safe=False)
 
+def all_grad(request):
+    round = int(request.GET.get('round', -1))
+    return JsonResponse(getRoundGrad(round), safe=False)
+
 def client_grad(request):
 
     round = int(request.GET.get('round', -1))
@@ -44,7 +49,7 @@ def client_grad(request):
     file = open(JSON_PATH + 'client_grad/' + filename, 'r', encoding='utf-8')
     data = json.load(file)
     file.close()
-
+    
     if round == -1:
         return JsonResponse({'round': int(list(data.keys())[-1]), 'data': data[list(data.keys())[-1]]}, safe=False)
     else:
@@ -113,17 +118,17 @@ def weight(request):
     return JsonResponse(data, safe=False)
 
 
-# def one_round_metric(request):
-#     round = int(request.GET.get('round', -1))
-#     layers = rfile.get_layer(request.GET.getlist('layers[]', []))
-#     res = getOneRound(round, layers)
-#     return JsonResponse(res, safe=False)
-#
-#
-# with open('data/dense_metrics.pkl', 'rb') as fp:
-#     Dense_Metric = pkl.load(fp)
-#
-#
-# def get_all_round_metric(request):
-#     layers = rfile.get_layer(request.GET.getlist('layers[]', []))
-#     return JsonResponse({'res': Dense_Metric}, safe=False)
+def one_round_metric(request):
+    round = int(request.GET.get('round', -1))
+    layer = rfile.get_layer(request.GET.get('layers', -1))
+    res = getOneRoundFromFile(round, layer)
+    return JsonResponse(res, safe=False)
+
+
+with open('data/dense_metrics.pkl', 'rb') as fp:
+    Dense_Metric = pkl.load(fp)
+
+
+def get_all_round_metric(request):
+    layers = rfile.get_layer(request.GET.getlist('layers[]', []))
+    return JsonResponse({'res': Dense_Metric}, safe=False)
