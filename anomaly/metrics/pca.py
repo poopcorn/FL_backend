@@ -32,16 +32,19 @@ class Pca:
 
         reconstruct_grad = np.asarray(reconstruct_grad)
 
-        print(reconstruct_grad)
-
         score = {}
         for i in range(len(sorted_grad)):
             score[str(i)] = np.sqrt(np.sum(np.square(sorted_grad[i] - reconstruct_grad[i])))
 
         max_val = max(score.values())
         min_val = min(score.values())
-        for key in score:
-            score[key] = (score[key] - min_val) / (max_val - min_val)
+        if max_val - min_val == 0 or max_val is 'nan' or min_val is 'nan':
+            print('nan value')
+            for key in score:
+                score[key] = 0
+        else:
+            for key in score:
+                score[key] = (score[key] - min_val) / (max_val - min_val)
 
         return score
 
