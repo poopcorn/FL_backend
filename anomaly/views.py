@@ -162,5 +162,6 @@ def pca(request):
     for i in range(len(data)):
         scores.append(pca_ojb.score(data[i]))
     score = rfile.avg_score(scores)
+    print(scores[11])
 
     return JsonResponse({'round': round, 'data': score}, safe=False)
