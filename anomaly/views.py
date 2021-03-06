@@ -102,7 +102,7 @@ def auror(request):
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
-    print(gradients['4'])
+    print(gradients['4'][11])
 
     auror_obj = Auror(k)
 
