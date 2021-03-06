@@ -102,16 +102,13 @@ def auror(request):
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
-    print(gradients['16'][0])
-    print(data[0]['16'])
 
     auror_obj = Auror(k)
 
     scores = []
-    # for i in range(len(data)):
-    #     scores.append(auror_obj.score(data[i]))
-    # score = rfile.avg_score(scores)
-    score = auror_obj.score(data[11])
+    for i in range(len(data)):
+        scores.append(auror_obj.score(data[i]))
+    score = rfile.avg_score(scores)
 
     return JsonResponse({'round': round, 'data': score}, safe=False)
 

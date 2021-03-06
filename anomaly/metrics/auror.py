@@ -15,7 +15,6 @@ class Auror:
             input.append(grad[key])
         input = np.asarray(input)
 
-        # input = np.asarray(list(grad.values()))
         kmeans = KMeans(n_clusters=self.k, random_state=0).fit(input)
         labels = kmeans.labels_
         centers = kmeans.cluster_centers_
@@ -29,8 +28,12 @@ class Auror:
 
         max_val = max(score.values())
         min_val = min(score.values())
-        for key in score:
-            score[key] = (score[key] - min_val) / (max_val - min_val)
+        if max_val - min_val == 0:
+            for key in score:
+                score[key] = 0
+        else:
+            for key in score:
+                score[key] = (score[key] - min_val) / (max_val - min_val)
 
         return score
 
