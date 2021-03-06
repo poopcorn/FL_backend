@@ -8,7 +8,7 @@ class Auror:
 
     def score(self, grad):
 
-        input = np.asarray(list(grad.values()))
+        input = 1000 * np.asarray(list(grad.values()))
         kmeans = KMeans(n_clusters=self.k, random_state=0).fit(input)
         labels = kmeans.labels_
         centers = kmeans.cluster_centers_
