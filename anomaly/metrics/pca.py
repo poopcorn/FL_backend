@@ -39,7 +39,6 @@ class Pca:
         max_val = max(score.values())
         min_val = min(score.values())
         if max_val - min_val == 0 or max_val is 'nan' or min_val is 'nan':
-            print('nan value')
             for key in score:
                 score[key] = 0
         else:
