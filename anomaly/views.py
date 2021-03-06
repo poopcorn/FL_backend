@@ -110,9 +110,9 @@ def auror(request):
     # for i in range(len(data)):
     #     scores.append(auror_obj.score(data[i]))
     # score = rfile.avg_score(scores)
-    # score = auror_obj.score(data[11])
+    score = auror_obj.score(data[11])
 
-    return JsonResponse({'round': round, 'data': 'under test'}, safe=False)
+    return JsonResponse({'round': round, 'data': score}, safe=False)
 
 def sniper(request):
 
