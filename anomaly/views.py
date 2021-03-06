@@ -106,9 +106,10 @@ def auror(request):
     auror_obj = Auror(k)
 
     scores = []
-    for i in range(len(data)):
-        scores.append(auror_obj.score(data[i]))
-    score = rfile.avg_score(scores)
+    # for i in range(len(data)):
+    #     scores.append(auror_obj.score(data[i]))
+    # score = rfile.avg_score(scores)
+    score = auror_obj.score(data[0])
 
     return JsonResponse({'round': round, 'data': score}, safe=False)
 
