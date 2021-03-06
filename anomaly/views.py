@@ -102,6 +102,7 @@ def auror(request):
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
+    print(data[11])
 
     auror_obj = Auror(k)
 
@@ -109,9 +110,9 @@ def auror(request):
     # for i in range(len(data)):
     #     scores.append(auror_obj.score(data[i]))
     # score = rfile.avg_score(scores)
-    score = auror_obj.score(data[11])
+    # score = auror_obj.score(data[11])
 
-    return JsonResponse({'round': round, 'data': score}, safe=False)
+    return JsonResponse({'round': round, 'data': 'under test'}, safe=False)
 
 def sniper(request):
 
