@@ -30,7 +30,7 @@ def performance(request):
 
     return JsonResponse(performance, safe=False)
 
-def all_grad(request):
+def get_grad_by_round(request):
     round = int(request.GET.get('round', -1))
     return JsonResponse(getRoundGrad(round), safe=False)
 
@@ -132,7 +132,7 @@ def one_round_metric(request):
     layer = rfile.get_layer(request.GET.get('layers', -1))
     res = getOneRoundFromFile(round, layer)
     return JsonResponse(res, safe=False)
-    
+
 
 with open('data/dense_metrics.pkl', 'rb') as fp:
     Dense_Metric = pkl.load(fp)

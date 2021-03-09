@@ -77,3 +77,7 @@ def getRoundGrad(round):
 
 # readAllGrad(500)
 # readAvgGrad(500)
+# gradFile = 'data/avg_grad/round_{}.pkl'.format(500)
+# with open(gradFile, 'rb') as fp:
+#     gradRes = pickle.load(fp)
+#     print("!!!!")

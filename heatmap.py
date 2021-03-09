@@ -171,6 +171,7 @@ def saveOneRound(roundNum, layer):
 
 
 # saveOneRound(500, 'conv2')
-# allRoundFile = 'data/{}_{}.pkl'.format(3, 'conv1')
+# allRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')
 # with open(allRoundFile, 'rb') as fp:
 #     allRoundRes = pickle.load(fp)
+#     print("!!!!")
