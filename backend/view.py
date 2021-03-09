@@ -118,12 +118,21 @@ def weight(request):
     return JsonResponse(data, safe=False)
 
 
+def get_metrics_by_rounds(request):
+    curRound = int(request.GET.get('round', -1))
+    roundNum = int(request.GET.get('roundNum', -1))
+    layer = rfile.get_layer(request.GET.get('layers', -1))
+    res = []
+    for round in range(curRound, curRound + roundNum):
+        res.append(getOneRoundFromFile(round, layer))
+    return JsonResponse(res, safe=False)
+
 def one_round_metric(request):
     round = int(request.GET.get('round', -1))
     layer = rfile.get_layer(request.GET.get('layers', -1))
     res = getOneRoundFromFile(round, layer)
     return JsonResponse(res, safe=False)
-
+    
 
 with open('data/dense_metrics.pkl', 'rb') as fp:
     Dense_Metric = pkl.load(fp)
