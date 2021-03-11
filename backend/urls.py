@@ -28,6 +28,8 @@ urlpatterns = [
     path('contribution/', include('contribution.urls')),
     path('get_metrics_by_rounds/', view.get_metrics_by_rounds),
     path('one_round_metrics/', view.one_round_metric),
-    path('get_grad_by_round/', view.get_grad_by_round)
+    path('get_grad_by_round/', view.get_grad_by_round),
+    path('get_multiple_information/', view.get_multiple_information),
+    path('get_gradient_tsne/', view.get_tsne_res)
     # path('all_round_metrics/', view.get_all_round_metric)
 ]

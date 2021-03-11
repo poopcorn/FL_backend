@@ -46,8 +46,8 @@ def getOneRoundFromFile(curRound, layer):
     if curRound < 500 and curRound > 2:
         if layer == 'conv1':
             return allRoundRes['conv1'][curRound]
-        else:
-            pass
+        elif layer == 'conv2':
+            return allRoundRes['conv2'][curRound]
     return getOneRound(curRound, layer)
 
 
@@ -168,7 +168,6 @@ def saveOneRound(roundNum, layer, name):
     with open(path, 'wb') as fp:
         pickle.dump(res, fp)
         fp.close()
-
 
 # saveOneRound(500, 'conv1', 'auror=1')
 # allRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')

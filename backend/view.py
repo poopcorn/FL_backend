@@ -7,6 +7,7 @@ from backend.settings import JSON_PATH
 from backend.settings import ROUND_EVERY_FILE
 from backend.file import File
 from heatmap import getOneRound, getOneRoundFromFile, rfile
+from impact import multiple_information, get_tsne
 from feature import getRoundGrad
 
 
@@ -141,3 +142,18 @@ with open('data/dense_metrics.pkl', 'rb') as fp:
 def get_all_round_metric(request):
     layers = rfile.get_layer(request.GET.getlist('layers[]', []))
     return JsonResponse({'res': Dense_Metric}, safe=False)
+
+def get_multiple_information(request):
+    start = int(request.GET.get('start', -1))
+    end = int(request.GET.get('end', -1))
+    layer = rfile.get_layer(request.GET.get('layers', -1))
+    filter = request.GET.getlist('filter[]', [])
+    multipleInfo = multiple_information(start, end, layer, filter)
+    return JsonResponse({'res': multipleInfo}, safe=False)
+
+def get_tsne_res(request):
+    start = int(request.GET.get('start', -1))
+    end = int(request.GET.get('end', -1))
+    position = get_tsne(start, end)
+    return JsonResponse({'res': position}, safe=False)
+
