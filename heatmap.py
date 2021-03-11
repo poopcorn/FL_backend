@@ -23,7 +23,7 @@ from contribution.metrics.perf import Perf
 rfile = RFile(JSON_PATH)
 sniper_obj = Sniper(0.8)
 fools_obj = Fools(-1)
-auror_obj = Auror(5)
+auror_obj = Auror(1)
 zeno_obj = Zeno(100)
 pca_obj = Pca(5)
 atten_eu_obj = Atten('eu')
@@ -156,8 +156,8 @@ def get_all_round():
 
 # getOneRound(100, 'conv1')
 
-def saveOneRound(roundNum, layer):
-    path = 'data/{}_{}.pkl'.format(roundNum, layer)
+def saveOneRound(roundNum, layer, name):
+    path = 'data/{}_{}_{}.pkl'.format(roundNum, layer, name)
     if os.path.exists(path):
         print('file {path} has already saved!')
         return
@@ -170,7 +170,7 @@ def saveOneRound(roundNum, layer):
         fp.close()
 
 
-# saveOneRound(500, 'conv2')
+# saveOneRound(500, 'conv1', 'auror=1')
 # allRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')
 # with open(allRoundFile, 'rb') as fp:
 #     allRoundRes = pickle.load(fp)

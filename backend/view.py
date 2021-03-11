@@ -123,7 +123,7 @@ def get_metrics_by_rounds(request):
     roundNum = int(request.GET.get('roundNum', -1))
     layer = rfile.get_layer(request.GET.get('layers', -1))
     res = []
-    for round in range(curRound, curRound + roundNum):
+    for round in range(curRound - roundNum + 1, curRound + 1):
         res.append(getOneRoundFromFile(round, layer))
     return JsonResponse(res, safe=False)
 
