@@ -29,38 +29,46 @@ def multiple_information(start, end ,layer, filter):
                 mutualinfo.mutual_info(clientMetrics[i], clientMetrics[j])
     return multipleInfo.tolist()
 
-def get_tsne(start, end):
+
+tsne = TSNE(n_components=2)
+def get_tsne(start, end, layer):
     # get all gradient data
     allFeatureMap = [getRoundGrad(round) for round in range(start, end + 1)]
     curFeature = [v['cur'] for v in allFeatureMap]
     avgFeature = [v['avg'] for v in allFeatureMap]
 
     # translate into numpy
-    conv1_shape = np.array(curFeature[0][0]['conv1']).flatten().shape[0]
-    conv2_shape = np.array(curFeature[0][0]['conv2']).flatten().shape[0]
+    conv_shape = np.array(curFeature[0][0][layer]).flatten().shape[0]
     roundNum = end - start + 1
-    # (clientNum, (roundNum + roundNum//avg), featuremap Flatten shape)
-    tsne_X = {
-        'conv1': np.zeros((DEFAULT_CLIENT_NUM, roundNum * 2, conv1_shape)),
-        'conv2': np.zeros((DEFAULT_CLIENT_NUM, roundNum * 2, conv2_shape)),
-    }
-    client_tsne = {
-        'conv1': [],
-        'conv2': []
-    }
-    for i in range(DEFAULT_CLIENT_NUM):
+    # ((clientNum + avg * roundNum), featuremap Flatten shape)
+    shape = ((DEFAULT_CLIENT_NUM + 1) * roundNum, conv_shape)
+    tsne_X = np.zeros(shape)
+    for i in range(DEFAULT_CLIENT_NUM + 1):
         for roundIdx in range(roundNum):
-            tsne_X['conv1'][i][roundIdx] = np.array(curFeature[roundIdx][i]['conv1']).flatten()
-            # avg data
-            tsne_X['conv1'][i][roundNum + roundIdx] = np.array(avgFeature[roundIdx]['conv1']).flatten()
+            idx = i * roundNum + roundIdx
+            if i == DEFAULT_CLIENT_NUM:
+                # avg data
+                tsne_X[idx] = np.array(avgFeature[roundIdx][layer]).flatten()
+            else:
+                # client data
+                tsne_X[idx] = np.array(curFeature[roundIdx][i][layer]).flatten()
+    tsneRes = tsne.fit_transform(tsne_X)
 
-            tsne_X['conv2'][i][roundIdx] = np.array(curFeature[roundIdx][i]['conv2']).flatten()
-            # avg data
-            tsne_X['conv2'][i][roundNum + roundIdx] = np.array(avgFeature[roundIdx]['conv2']).flatten()    
-        # calculate Tsne
-        client_tsne['conv1'].append(TSNE(n_components=2).fit_transform(tsne_X['conv1'][i]).tolist())
-        client_tsne['conv2'].append(TSNE(n_components=2).fit_transform(tsne_X['conv2'][i]).tolist())
-    return client_tsne
+    # transfer to client postion and avg positon, length = DEFAULT_CLIENT_NUM + 1
+    position = []
+    diff = []
+    avg_offset = DEFAULT_CLIENT_NUM  * roundNum
+    for i in range(DEFAULT_CLIENT_NUM ):
+        offset = i * roundNum
+        position.append(tsneRes[offset: offset + roundNum].tolist())    # calculate Tsne
+        diff.append(
+            [np.linalg.norm(tsne_X[offset + roundIdx] - tsne_X[avg_offset + roundIdx]) for roundIdx in range(roundNum)]
+        )
+    return {
+        'position': position,
+        'avgPos': tsneRes[avg_offset: avg_offset + roundNum].tolist(),
+        'diff': diff
+    }
 
-# get_tsne(10, 12)
+# get_tsne(100, 110, 'conv1')
 # multiple_information(10, 12, 'conv1', [1,1,1,1,1,1,1,1,1])

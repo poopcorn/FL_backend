@@ -147,13 +147,16 @@ def get_multiple_information(request):
     start = int(request.GET.get('start', -1))
     end = int(request.GET.get('end', -1))
     layer = rfile.get_layer(request.GET.get('layers', -1))
-    filter = request.GET.getlist('filter[]', [])
+    filterData = request.GET.getlist('filter[]', [])
+    filter = [int(v) for v in filterData]
+    print(filter)
     multipleInfo = multiple_information(start, end, layer, filter)
     return JsonResponse({'res': multipleInfo}, safe=False)
 
 def get_tsne_res(request):
     start = int(request.GET.get('start', -1))
     end = int(request.GET.get('end', -1))
-    position = get_tsne(start, end)
-    return JsonResponse({'res': position}, safe=False)
+    layer = request.GET.get('layer', 'conv1')
+    res = get_tsne(start, end, layer)
+    return JsonResponse({'res': res}, safe=False)
 
