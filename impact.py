@@ -114,8 +114,3 @@ def get_tsne(start, end, layer):
         'avgPos': tsneRes[avg_offset: avg_offset + roundNum].tolist(),
         'diff': diff
     }
-
-# get_tsne(2, 11, 'conv1')
-# multiple_information(10, 12, 'conv1', [1,1,1,1,1,1,1,1,1])
-# x = np.array([1,0,0,0])
-# y = np.array([0,1,1,0])

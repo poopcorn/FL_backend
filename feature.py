@@ -12,7 +12,7 @@ from backend.rfile import RFile
 
 # READ RFILE
 
-def readAvgGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
+def saveAvgGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
     rfile = RFile(JSON_PATH)
     gradientPath = JSON_PATH + 'avg_grad/'
     allFiles = os.listdir(gradientPath)
@@ -31,8 +31,14 @@ def readAvgGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
                 pickle.dump(roundRes, fp)
                 fp.close()
 
-
-def readAllGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
+'''
+    保存对应轮次中,所有client的所有梯度，包括所有层
+    @params:
+    allRound: 所有轮次的数量
+    clientNum: client数量
+    layers: string list, 哪些层要保留
+'''
+def saveAllGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
     rfile = RFile(JSON_PATH)
     gradientPath = JSON_PATH + 'client_grad/'
     allFiles = os.listdir(gradientPath)
@@ -74,10 +80,3 @@ def getRoundGrad(round):
         'cur': curRound,
         'avg': avgRes
     }
-
-# readAllGrad(500)
-# readAvgGrad(500)
-# gradFile = 'data/avg_grad/round_{}.pkl'.format(500)
-# with open(gradFile, 'rb') as fp:
-#     gradRes = pickle.load(fp)
-#     print("!!!!")

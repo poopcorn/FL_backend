@@ -154,23 +154,22 @@ def get_all_round():
     with open('data/dense_metrics.pkl', 'wb') as fp:
         pickle.dump(res, fp)
 
-# getOneRound(100, 'conv1')
-
-def saveOneRound(roundNum, layer, name):
-    path = 'data/{}_{}_{}.pkl'.format(roundNum, layer, name)
+'''
+保存从第2轮到第roundEnd轮次中对应layer的所有metric值，
+@params
+roundEnd: 具体结尾轮次
+layer: 'conv1' 或者 'conv2'
+name: 保存文件的名字
+'''
+def saveOneRound(roudEnd, layer, name):
+    path = 'data/{}_{}_{}.pkl'.format(roudEnd, layer, name)
     if os.path.exists(path):
         print('file {path} has already saved!')
         return
     res = [[], []]
-    for i in range(2, roundNum):
+    for i in range(2, roudEnd):
         print(i)
         res.append(getOneRound(i, layer))
     with open(path, 'wb') as fp:
         pickle.dump(res, fp)
         fp.close()
-
-# saveOneRound(500, 'conv1', 'auror=1')
-# allRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')
-# with open(allRoundFile, 'rb') as fp:
-#     allRoundRes = pickle.load(fp)
-#     print("!!!!")
