@@ -1,36 +1,81 @@
 import numpy as np
+import math
 from sklearn.manifold import TSNE
-from pyinform import mutualinfo
 from heatmap import getOneRoundFromFile
 from feature import getRoundGrad
 from backend.settings import DEFAULT_CLIENT_NUM
 
 
+def get_multipleInfo(x, y, interval=0.2, scale=[-1, 1]):
+    domin = scale[1] - scale[0]
+    num = math.ceil(domin / interval)
+    matrix = np.zeros((num, num))
+    length = x.shape[0]
+    # set p(x,y) in matrix
+    for i in range(length):
+        mx = min(num - 1, int((x[i] - scale[0]) / interval))
+        my = min(num - 1, int((y[i] - scale[0]) / interval))
+        matrix[mx][my] += 1 / length
+    # set p(x) and p(y)
+    px = np.zeros(num)
+    py = np.zeros(num)
+    for i in range(num):
+        px[i] = np.sum(matrix[i])
+        py[i] = np.sum(matrix[:, i])
+    
+    res = 0
+    for i in range(num):
+        for j in range(num):
+            if matrix[i][j] == 0:
+                continue
+            res += matrix[i][j] * math.log(matrix[i][j] / px[i] / py[j] , num)
+    return res
+
+tsne = TSNE(n_components=2)
 def multiple_information(start, end ,layer, filter):
     # get all metric data
     allMetrics = [getOneRoundFromFile(round, layer) for round in range(start, end + 1)]
     metricNum = sum(filter)
     roundNum = end - start + 1
     clientMetrics = np.zeros((DEFAULT_CLIENT_NUM, metricNum * roundNum))
+    # tsne data
+    shape = ((DEFAULT_CLIENT_NUM + 1) * roundNum, metricNum)
+    tsne_X = np.zeros(shape)
+    avg_offset = DEFAULT_CLIENT_NUM * roundNum
     for clientId in range(DEFAULT_CLIENT_NUM):
         for roundIdx in range(roundNum):
             cnt = 0
+            idx = clientId * roundNum + roundIdx
             for metircId, f in enumerate(filter):
                 if f == 0:
                     continue
                 clientMetrics[clientId][roundIdx * metricNum + cnt] = allMetrics[roundIdx][metircId][str(clientId)]
+                tsne_X[idx][cnt] = allMetrics[roundIdx][metircId][str(clientId)]
+                tsne_X[avg_offset + roundIdx][cnt] += (allMetrics[roundIdx][metircId][str(clientId)] / DEFAULT_CLIENT_NUM)
                 cnt += 1
+    
     # calculate Mutiple Information
     multipleInfo = np.zeros((DEFAULT_CLIENT_NUM, DEFAULT_CLIENT_NUM), dtype=np.float32)
     for i in range(DEFAULT_CLIENT_NUM):
         for j in range(i + 1, DEFAULT_CLIENT_NUM):
-            multipleInfo[j][i] = \
-            multipleInfo[i][j] = \
-                mutualinfo.mutual_info(clientMetrics[i], clientMetrics[j])
-    return multipleInfo.tolist()
+            multipleInfo[j][i] = multipleInfo[i][j] = get_multipleInfo(clientMetrics[i], clientMetrics[j])
+    
+    # get metric data of tsne
+    tsneRes = tsne.fit_transform(tsne_X)
+    position = []
+    for i in range(DEFAULT_CLIENT_NUM):
+        offset = i * roundNum
+        position.append(tsneRes[offset: offset + roundNum].tolist())
+    return {
+        'multipleInfo': multipleInfo.tolist(),
+        'tsne': {
+            'position': position,
+            'avgPos': tsneRes[avg_offset: avg_offset + roundNum].tolist()
+        }
+    }
+    # return multipleInfo.tolist()
 
 
-tsne = TSNE(n_components=2)
 def get_tsne(start, end, layer):
     # get all gradient data
     allFeatureMap = [getRoundGrad(round) for round in range(start, end + 1)]
@@ -70,5 +115,7 @@ def get_tsne(start, end, layer):
         'diff': diff
     }
 
-# get_tsne(100, 110, 'conv1')
+# get_tsne(2, 11, 'conv1')
 # multiple_information(10, 12, 'conv1', [1,1,1,1,1,1,1,1,1])
+# x = np.array([1,0,0,0])
+# y = np.array([0,1,1,0])
