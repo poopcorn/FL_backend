@@ -2,7 +2,7 @@
 from django.http import JsonResponse
 import json
 
-from backend.settings import JSON_PATH
+from const import JSON_PATH
 
 
 from contribution.metrics.attention import Atten

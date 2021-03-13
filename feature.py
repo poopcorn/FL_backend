@@ -3,20 +3,28 @@ import json
 import pickle
 import math
 
-from backend.settings import JSON_PATH
-from backend.settings import ROUND_EVERY_FILE
+from const import *
 from backend.file import File
-
 from backend.rfile import RFile
 
 
-# READ RFILE
 
-def saveAvgGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
+# READ RFILE
+'''
+    保存对应轮次中,所有client的平均梯度，包括所有层
+    @params:
+        prefix: 存储文件夹的路径
+        allRound: 所有轮次的数量
+        clientNum: client数量
+        layers: string list, 哪些层要保留
+'''
+def saveAvgGrad(prefix, allRound, clientNum=35, layers=['conv1', 'conv2']):
     rfile = RFile(JSON_PATH)
     gradientPath = JSON_PATH + 'avg_grad/'
     allFiles = os.listdir(gradientPath)
-    savePath = 'data/avg_grad/'
+    savePath = prefix + '/avg_grad/'
+    if not os.path.exists(savePath):
+        os.mkdir(savePath)
     for fileName in allFiles:
         file = open(gradientPath + fileName, 'r', encoding='utf-8')
         data = json.load(file)
@@ -34,21 +42,28 @@ def saveAvgGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
 '''
     保存对应轮次中,所有client的所有梯度，包括所有层
     @params:
-    allRound: 所有轮次的数量
-    clientNum: client数量
-    layers: string list, 哪些层要保留
+        prefix: 存储文件夹的路径
+        allRound: 所有轮次的数量
+        clientNum: client数量
+        layers: string list, 哪些层要保留
 '''
-def saveAllGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
+def saveAllGrad(prefix, allRound, clientNum=35, layers=['conv1', 'conv2']):
     rfile = RFile(JSON_PATH)
     gradientPath = JSON_PATH + 'client_grad/'
     allFiles = os.listdir(gradientPath)
-    savePath = 'data/client_grad/'
+    savePath = prefix + '/client_grad/'
+    if not os.path.exists(savePath):
+        os.mkdir(savePath)
     for fileName in allFiles:
         file = open(gradientPath + fileName, 'r', encoding='utf-8')
         data = json.load(file)
         file.close()
         for roundName in data:
             roundRes = []
+            filePath = savePath + 'round_{}.pkl'.format(roundName)
+            if os.path.exists(filePath):
+                print('{} has been saved'.format(filePath))
+                continue
             for clientId in range(clientNum):
                 roundRes.append({
                     'clientId': clientId,
@@ -61,9 +76,9 @@ def saveAllGrad(allRound, clientNum=35, layers=['conv1', 'conv2']):
                 fp.close()
 
 def getRoundGrad(round):
-    lastRound = 'data/client_grad/' + 'round_{}.pkl'.format(min(1, round - 1))
-    clientPath = 'data/client_grad/' + 'round_{}.pkl'.format(round)
-    avgPath = 'data/avg_grad/' + 'round_{}.pkl'.format(round)
+    lastRound = '{}/client_grad/round_{}.pkl'.format(DATA_SAVE_FILE, min(1, round - 1))
+    clientPath = '{}/client_grad/round_{}.pkl'.format(DATA_SAVE_FILE,round)
+    avgPath = '{}/avg_grad/round_{}.pkl'.format(DATA_SAVE_FILE, round)
     with open(clientPath, 'rb') as fp:
         curRound = pickle.load(fp)
         fp.close()

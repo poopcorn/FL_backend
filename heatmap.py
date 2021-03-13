@@ -3,8 +3,8 @@ import json
 import pickle
 import math
 
-from backend.settings import JSON_PATH
-from backend.settings import ROUND_EVERY_FILE
+from const import * 
+
 from backend.file import File
 
 from anomaly.metrics.krum import Krum
@@ -33,27 +33,32 @@ perf_l_obj = Perf('loss')
 
 # LOAD CLIENT DATA
 conv1AllRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')
-allRoundRes = {
-    'conv1': [],
-    'conv2': []
-}
-if os.path.exists(conv1AllRoundFile):
-    with open(conv1AllRoundFile, 'rb') as fp:
-        allRoundRes['conv1'] = pickle.load(fp)
-        fp.close()
+allRoundRes = {}
+for layer in LAYERS_NANME:
+    fileName = '{}/{}_{}.pkl'.format(DATA_SAVE_FILE, DEFAULT_ROUND_NUM, layer)
+    if os.path.exists(fileName):
+        with open(fileName, 'rb') as fp:
+            allRoundRes[layer] = pickle.load(fp)
+            fp.close()
 
 def getOneRoundFromFile(curRound, layer):
-    if curRound < 500 and curRound > 2:
-        if layer == 'conv1':
-            return allRoundRes['conv1'][curRound]
-        elif layer == 'conv2':
-            return allRoundRes['conv2'][curRound]
+    if curRound <= DEFAULT_ROUND_NUM and curRound >= 2:
+        fileName = '{}/{}_{}.pkl'.format(DATA_SAVE_FILE, DEFAULT_ROUND_NUM, layer)
+        if os.path.exists(fileName):
+            return allRoundRes[layer][curRound]
     return getOneRound(curRound, layer)
 
-
-def getOneRound(round, layers):
+'''
+    获取模型某一轮，某个layer层的metric数据
+    @params：
+        round: 具体哪一轮
+        layer: 具体哪一层
+    @returns:
+        res: list[][], shape = (9, clientNum),代表了每个指标，所有client的具体数值
+'''
+def getOneRound(round, layer):
     # Anomaly Metrics
-    result = rfile.get_grad(JSON_PATH, layers, round)
+    result = rfile.get_grad(JSON_PATH, layer, round)
     after_round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
@@ -88,9 +93,9 @@ def getOneRound(round, layers):
     latest_perf = latest_result['data']
     former_perf = rfile.get_perf(JSON_PATH, latest_round - 1, 'train')['data']
 
-    latest_grad = rfile.get_grad(JSON_PATH, layers, latest_round)['data']
+    latest_grad = rfile.get_grad(JSON_PATH, layer, latest_round)['data']
     reshape_latest_grad = rfile.reshape_grad(latest_grad)
-    former_grad = rfile.get_grad(JSON_PATH, layers, latest_round - 1)['data']
+    former_grad = rfile.get_grad(JSON_PATH, layer, latest_round - 1)['data']
     reshape_former_grad = rfile.reshape_grad(former_grad)
 
     zeno_scores = []
@@ -99,7 +104,7 @@ def getOneRound(round, layers):
     zeno_res = rfile.avg_score(zeno_scores)
 
     # Contribution Metrics
-    avg_grad = rfile.get_avg_grad(JSON_PATH, layers, round - 1)['data']
+    avg_grad = rfile.get_avg_grad(JSON_PATH, layer, round - 1)['data']
     avg_data = rfile.reshape_avg_grad(avg_grad)
 
     # attention
@@ -137,10 +142,10 @@ def get_all_round():
         'anomaly': [[] for i in range(6)],
         'contribution': [[] for i in range(4)]
     } for client in range(35)]
-    layers = ['dense']
+    layer = ['dense']
     for round in range(1, 500):
         print(round)
-        oneRes = getOneRound(round, layers)
+        oneRes = getOneRound(round, layer)
         for client in range(35):
             for i in range(6):
                 tmp = oneRes[i][str(client)]
@@ -155,21 +160,23 @@ def get_all_round():
         pickle.dump(res, fp)
 
 '''
-保存从第2轮到第roundEnd轮次中对应layer的所有metric值，
-@params
-roundEnd: 具体结尾轮次
-layer: 'conv1' 或者 'conv2'
-name: 保存文件的名字
+    保存从第2轮到第roundEnd轮次中对应layer的所有metric值，
+    @params
+        roundEnd: 具体结尾轮次
+        layer: 'conv1' 或者 'conv2'
+        name: 保存文件的名字
 '''
-def saveOneRound(roudEnd, layer, name):
-    path = 'data/{}_{}_{}.pkl'.format(roudEnd, layer, name)
+def saveOneRound(roudEnd, layer, prefix):
+    path = '{}/{}_{}.pkl'.format(prefix, roudEnd, layer)
     if os.path.exists(path):
         print('file {path} has already saved!')
         return
     res = [[], []]
     for i in range(2, roudEnd):
-        print(i)
         res.append(getOneRound(i, layer))
     with open(path, 'wb') as fp:
         pickle.dump(res, fp)
         fp.close()
+    print('Finsh Save {}'.format(path))
+
+# saveOneRound(500, 'conv2', 'auror=1')

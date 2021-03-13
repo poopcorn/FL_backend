@@ -1,8 +1,7 @@
 import json
 import os
 
-from backend.settings import JSON_PATH
-from backend.settings import ROUND_EVERY_FILE
+from const import *
 
 from anomaly.metrics.krum import Krum
 from anomaly.metrics.zeno import Zeno

@@ -3,7 +3,7 @@ import math
 from sklearn.manifold import TSNE
 from heatmap import getOneRoundFromFile
 from feature import getRoundGrad
-from backend.settings import DEFAULT_CLIENT_NUM
+from const import DEFAULT_CLIENT_NUM
 
 
 def get_multipleInfo(x, y, interval=0.2, scale=[-1, 1]):

@@ -3,7 +3,7 @@ import numpy as np
 
 
 from backend.file import File
-from backend.settings import ROUND_EVERY_FILE
+from const import ROUND_EVERY_FILE
 
 
 class RFile:

@@ -9,7 +9,7 @@ from anomaly.metrics.sniper import Sniper
 from anomaly.metrics.pca import Pca
 from backend.rfile import RFile
 
-from backend.settings import JSON_PATH
+from const import JSON_PATH
 import numpy as np
 
 

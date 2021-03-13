@@ -3,8 +3,7 @@ from django.http import JsonResponse
 import json
 import pickle as pkl
 
-from backend.settings import JSON_PATH
-from backend.settings import ROUND_EVERY_FILE
+from const import JSON_PATH, ROUND_EVERY_FILE
 from backend.file import File
 from heatmap import getOneRound, getOneRoundFromFile, rfile
 from impact import multiple_information, get_tsne

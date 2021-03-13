@@ -124,9 +124,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-DEFAULT_DATASET = ''
-DEFAULT_CLIENT_NUM = 35
-JSON_PATH = '/home/zty_11621014/fedcare/federated/data/experiments/label_flip_case/'
-ROUND_EVERY_FILE = 10
-# JSON_PATH = '/Users/zhangtianye/Documents/FD/Femnist/process/iid_normal_35_35/'
