@@ -50,5 +50,5 @@ def perf_diff(request):
 
     perf_obj = Perf(metric)
 
-    return JsonResponse({'round': contribution}, safe=False)
-    # return JsonResponse({'round': round, 'data': perf_obj.score(contribution)}, safe=False)
+    # return JsonResponse({'round': contribution}, safe=False)
+    return JsonResponse({'round': round, 'data': perf_obj.score(contribution)}, safe=False)
