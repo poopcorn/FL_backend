@@ -134,8 +134,8 @@ def one_round_metric(request):
     return JsonResponse(res, safe=False)
 
 
-with open('data/dense_metrics.pkl', 'rb') as fp:
-    Dense_Metric = pkl.load(fp)
+# with open('data/dense_metrics.pkl', 'rb') as fp:
+#     Dense_Metric = pkl.load(fp)
 
 
 def get_all_round_metric(request):
