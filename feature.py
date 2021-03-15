@@ -6,6 +6,7 @@ import math
 from const import *
 from backend.file import File
 from backend.rfile import RFile
+from const import LAYERS_NANME
 
 
 
@@ -18,7 +19,7 @@ from backend.rfile import RFile
         clientNum: client数量
         layers: string list, 哪些层要保留
 '''
-def saveAvgGrad(prefix, allRound, clientNum=35, layers=['conv1', 'conv2']):
+def saveAvgGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
     rfile = RFile(JSON_PATH)
     gradientPath = JSON_PATH + 'avg_grad/'
     allFiles = os.listdir(gradientPath)
@@ -31,8 +32,8 @@ def saveAvgGrad(prefix, allRound, clientNum=35, layers=['conv1', 'conv2']):
         file.close()
         for roundName in data:
             roundRes = {
-                'conv1': rfile.extract_grad(data[str(roundName)]['conv1'])[0],
-                'conv2': rfile.extract_grad(data[str(roundName)]['conv2'])[0]
+                LAYERS_NANME[0]: rfile.extract_grad(data[str(roundName)][LAYERS_NANME[0]])[0],
+                LAYERS_NANME[1]: rfile.extract_grad(data[str(roundName)][LAYERS_NANME[1]])[0]
             }
             print('save round: {}'.format(roundName))
             with open(savePath + 'round_{}.pkl'.format(roundName), 'wb') as fp:
@@ -47,7 +48,7 @@ def saveAvgGrad(prefix, allRound, clientNum=35, layers=['conv1', 'conv2']):
         clientNum: client数量
         layers: string list, 哪些层要保留
 '''
-def saveAllGrad(prefix, allRound, clientNum=35, layers=['conv1', 'conv2']):
+def saveAllGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
     rfile = RFile(JSON_PATH)
     gradientPath = JSON_PATH + 'client_grad/'
     allFiles = os.listdir(gradientPath)
@@ -67,8 +68,8 @@ def saveAllGrad(prefix, allRound, clientNum=35, layers=['conv1', 'conv2']):
             for clientId in range(clientNum):
                 roundRes.append({
                     'clientId': clientId,
-                    'conv1': rfile.extract_grad(data[str(roundName)][str(clientId)]['conv1'])[0],
-                    'conv2': rfile.extract_grad(data[str(roundName)][str(clientId)]['conv2'])[0]
+                    LAYERS_NANME[0]: rfile.extract_grad(data[str(roundName)][str(clientId)][LAYERS_NANME[0]])[0],
+                    LAYERS_NANME[1]: rfile.extract_grad(data[str(roundName)][str(clientId)][LAYERS_NANME[1]])[0]
                 })
             print('save round: {}'.format(roundName))
             with open(savePath + 'round_{}.pkl'.format(roundName), 'wb') as fp:
