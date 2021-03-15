@@ -123,6 +123,7 @@ class RFile:
                     vec2.append(gradient[i][j][k])
                 vec1.append(vec2)
             data.append(vec1)
+        print(l4)
         return data, l4
 
     def reshape_grad(self, gradient):
