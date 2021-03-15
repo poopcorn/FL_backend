@@ -107,6 +107,7 @@ class RFile:
         l2 = len(gradient[0])
         l3 = len(gradient[0][0])
         l4 = len(gradient[0][0][0])
+        print(l1, l2, l3, l4)
         for i in range(l1):
             for j in range(l2):
                 vec = np.array(gradient[i][j][0])
@@ -123,7 +124,6 @@ class RFile:
                     vec2.append(gradient[i][j][k])
                 vec1.append(vec2)
             data.append(vec1)
-        print(l4)
         return data, l4
 
     def reshape_grad(self, gradient):
