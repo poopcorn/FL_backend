@@ -32,6 +32,9 @@ class RFile:
     # determine gradients from which layers should be used
     def get_grad(self, path, layer, round):
 
+        print(path)
+        print(layer)
+        print(round)
         filename = self.get_filename(round, 'client_grad', 'gradients_')
 
         file = open(path + 'client_grad/' + filename, 'r', encoding='utf-8')
