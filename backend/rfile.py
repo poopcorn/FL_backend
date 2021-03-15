@@ -113,7 +113,7 @@ class RFile:
                 for j in range(1, l2):
                     vec += np.array(gradient[i][j])
                 vec = vec / l2
-                data.append(vec)
+                data.append(vec.tolist())
             return data, l1
         else:
             for i in range(l1):

@@ -96,3 +96,5 @@ def getRoundGrad(round):
         'cur': curRound,
         'avg': avgRes
     }
+
+# getRoundGrad(20)
