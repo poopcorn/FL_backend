@@ -42,7 +42,7 @@ for key in data:
 
         rfile = RFile(JSON_PATH)
 
-        layers = ['dense']
+        layers = ['layer1']
         round = int(key)
         this_round_gradients = rfile.get_grad(JSON_PATH, layers, round)['data']
         last_round_gradients = rfile.get_grad(JSON_PATH, layers, round - 1)['data']
@@ -65,7 +65,7 @@ for key in data:
         zeno_score = zeno_obj.score(this_round_perf, last_round_perf, this_round_gradients, last_round_gradients)
 
         #auror
-        auror_obj = Auror(5)
+        auror_obj = Auror(1)
         auror_score = auror_obj.score(this_round_gradients)
 
         #sniper
