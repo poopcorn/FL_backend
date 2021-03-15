@@ -17,8 +17,8 @@ for layer in LAYERS_NANME:
 print('Finish compute metric data!')
 
 # 存储梯度数据
-print('Begin compute gradient data......')
-saveAllGrad(DATA_SAVE_FILE, roundNum, DEFAULT_CLIENT_NUM, LAYERS_NANME)
-saveAvgGrad(DATA_SAVE_FILE, roundNum, DEFAULT_CLIENT_NUM, LAYERS_NANME)
-print('Finish compute gradient data!')
+# print('Begin compute gradient data......')
+# saveAllGrad(DATA_SAVE_FILE, roundNum, DEFAULT_CLIENT_NUM, LAYERS_NANME)
+# saveAvgGrad(DATA_SAVE_FILE, roundNum, DEFAULT_CLIENT_NUM, LAYERS_NANME)
+# print('Finish compute gradient data!')
 
