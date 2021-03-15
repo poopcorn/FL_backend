@@ -22,4 +22,9 @@ class Perf:
         else:
             for key in contribution:
                 score[key] = - contribution[key][self.metric]
-        return score
+
+        if self.metric == 'accuracy':
+            return score
+        elif self.metric == 'loss':
+            return (- score)
+        # return score
