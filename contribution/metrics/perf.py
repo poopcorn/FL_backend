@@ -26,5 +26,7 @@ class Perf:
         if self.metric == 'accuracy':
             return score
         elif self.metric == 'loss':
-            return (- score)
+            for key in list(score.keys()):
+                score[key] = - score[key]
+            return score
         # return score
