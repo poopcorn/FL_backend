@@ -3,7 +3,7 @@ import json
 import pickle
 import math
 
-from const import *
+import const
 from backend.file import File
 from backend.rfile import RFile
 from const import LAYERS_NANME
@@ -20,8 +20,8 @@ from const import LAYERS_NANME
         layers: string list, 哪些层要保留
 '''
 def saveAvgGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
-    rfile = RFile(JSON_PATH)
-    gradientPath = JSON_PATH + 'avg_grad/'
+    rfile = RFile(const.JSON_PATH)
+    gradientPath = const.JSON_PATH + 'avg_grad/'
     allFiles = os.listdir(gradientPath)
     savePath = prefix + '/avg_grad/'
     if not os.path.exists(savePath):
@@ -49,8 +49,8 @@ def saveAvgGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
         layers: string list, 哪些层要保留
 '''
 def saveAllGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
-    rfile = RFile(JSON_PATH)
-    gradientPath = JSON_PATH + 'client_grad/'
+    rfile = RFile(const.JSON_PATH)
+    gradientPath = const.JSON_PATH + 'client_grad/'
     allFiles = os.listdir(gradientPath)
     savePath = prefix + '/client_grad/'
     if not os.path.exists(savePath):
@@ -77,9 +77,9 @@ def saveAllGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
                 fp.close()
 
 def getRoundGrad(round):
-    lastRound = '{}/client_grad/round_{}.pkl'.format(DATA_SAVE_FILE, min(1, round - 1))
-    clientPath = '{}/client_grad/round_{}.pkl'.format(DATA_SAVE_FILE,round)
-    avgPath = '{}/avg_grad/round_{}.pkl'.format(DATA_SAVE_FILE, round)
+    lastRound = '{}/client_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE, min(1, round - 1))
+    clientPath = '{}/client_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE,round)
+    avgPath = '{}/avg_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE, round)
     with open(clientPath, 'rb') as fp:
         curRound = pickle.load(fp)
         fp.close()

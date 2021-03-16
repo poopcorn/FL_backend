@@ -2,8 +2,7 @@
 from django.http import JsonResponse
 import json
 
-from const import JSON_PATH
-
+import const
 
 from contribution.metrics.attention import Atten
 from contribution.metrics.perf import Perf
@@ -13,19 +12,19 @@ from backend.rfile import RFile
 
 def attention(request):
 
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     metric = request.GET.get('metric', 'cos')
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
 
-    result = rfile.get_grad(JSON_PATH, layers, round)
+    result = rfile.get_grad(const.JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
 
 
-    avg_grad = rfile.get_avg_grad(JSON_PATH, layers, round - 1)['data']
+    avg_grad = rfile.get_avg_grad(const.JSON_PATH, layers, round - 1)['data']
     avg_data = rfile.reshape_avg_grad(avg_grad)
 
     atten_obj = Atten(metric)
@@ -39,12 +38,12 @@ def attention(request):
 
 def perf_diff(request):
 
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     metric = request.GET.get('metric', 'accuracy')
     round = int(request.GET.get('round', -1))
 
-    result = rfile.get_con(JSON_PATH, round)
+    result = rfile.get_con(const.JSON_PATH, round)
     round = result['round']
     contribution = result['data']
 

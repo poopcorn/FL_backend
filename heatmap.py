@@ -3,8 +3,7 @@ import json
 import pickle
 import math
 
-from const import *
-# import const
+import const
 
 from backend.file import File
 
@@ -34,16 +33,16 @@ perf_l_obj = Perf('loss')
 # LOAD CLIENT DATA
 conv1AllRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')
 allRoundRes = {}
-for layer in LAYERS_NANME:
-    fileName = '{}/{}_{}.pkl'.format(DATA_SAVE_FILE, DEFAULT_ROUND_NUM, layer)
+for layer in const.LAYERS_NANME:
+    fileName = '{}/{}_{}.pkl'.format(const.DATA_SAVE_FILE, const.DEFAULT_ROUND_NUM, layer)
     if os.path.exists(fileName):
         with open(fileName, 'rb') as fp:
             allRoundRes[layer] = pickle.load(fp)
             fp.close()
 
 def getOneRoundFromFile(curRound, layer):
-    if curRound <= DEFAULT_ROUND_NUM and curRound >= 2:
-        fileName = '{}/{}_{}.pkl'.format(DATA_SAVE_FILE, DEFAULT_ROUND_NUM, layer)
+    if curRound <= const.DEFAULT_ROUND_NUM and curRound >= 2:
+        fileName = '{}/{}_{}.pkl'.format(const.DATA_SAVE_FILE, const.DEFAULT_ROUND_NUM, layer)
         if os.path.exists(fileName):
             return allRoundRes[layer][curRound]
     return getOneRound(curRound, layer)
@@ -57,10 +56,10 @@ def getOneRoundFromFile(curRound, layer):
         res: list[][], shape = (9, clientNum),代表了每个指标，所有client的具体数值
 '''
 def getOneRound(round, layer):
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     # Anomaly Metrics
-    result = rfile.get_grad(JSON_PATH, layer, round)
+    result = rfile.get_grad(const.JSON_PATH, layer, round)
     after_round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
@@ -90,14 +89,14 @@ def getOneRound(round, layer):
     pca_res = rfile.avg_score(pca_scores)
 
     # zeno
-    latest_result = rfile.get_perf(JSON_PATH, round, 'train')
+    latest_result = rfile.get_perf(const.JSON_PATH, round, 'train')
     latest_round = latest_result['round']
     latest_perf = latest_result['data']
-    former_perf = rfile.get_perf(JSON_PATH, latest_round - 1, 'train')['data']
+    former_perf = rfile.get_perf(const.JSON_PATH, latest_round - 1, 'train')['data']
 
-    latest_grad = rfile.get_grad(JSON_PATH, layer, latest_round)['data']
+    latest_grad = rfile.get_grad(const.JSON_PATH, layer, latest_round)['data']
     reshape_latest_grad = rfile.reshape_grad(latest_grad)
-    former_grad = rfile.get_grad(JSON_PATH, layer, latest_round - 1)['data']
+    former_grad = rfile.get_grad(const.JSON_PATH, layer, latest_round - 1)['data']
     reshape_former_grad = rfile.reshape_grad(former_grad)
 
     zeno_scores = []
@@ -106,7 +105,7 @@ def getOneRound(round, layer):
     zeno_res = rfile.avg_score(zeno_scores)
 
     # Contribution Metrics
-    avg_grad = rfile.get_avg_grad(JSON_PATH, layer, round - 1)['data']
+    avg_grad = rfile.get_avg_grad(const.JSON_PATH, layer, round - 1)['data']
     avg_data = rfile.reshape_avg_grad(avg_grad)
 
     # attention
@@ -121,7 +120,7 @@ def getOneRound(round, layer):
     atten_cos_res = rfile.avg_score(atten_cos_scores)
 
     # perf diff
-    no_layer_result = rfile.get_con(JSON_PATH, round)
+    no_layer_result = rfile.get_con(const.JSON_PATH, round)
     contribution = no_layer_result['data']
     perf_a_res = perf_a_obj.score(contribution)
     perf_l_res = perf_l_obj.score(contribution)

@@ -25,9 +25,9 @@ urlpatterns = [
     path('trained_clients/', view.trained_clients),
     path('weight/', view.weight),
     path('define_path/', view.define_path),
+    path('anomaly/', include('anomaly.urls')),
 
     # dont work
-    path('anomaly/', include('anomaly.urls')),
     path('contribution/', include('contribution.urls')),
     path('get_metrics_by_rounds/', view.get_metrics_by_rounds),
     path('one_round_metrics/', view.one_round_metric),
