@@ -9,7 +9,7 @@ from anomaly.metrics.sniper import Sniper
 from anomaly.metrics.pca import Pca
 from backend.rfile import RFile
 
-from const import *
+# from const import *
 import const
 import numpy as np
 
@@ -41,13 +41,13 @@ import numpy as np
 
 def fools(request):
 
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     k = int(request.GET.get('k', -1))
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
 
-    result = rfile.get_grad(JSON_PATH, layers, round)
+    result = rfile.get_grad(const.JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
@@ -63,21 +63,21 @@ def fools(request):
 
 def zeno(request):
 
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     # suggest p = 100
     p = float(request.GET.get('p', -1))
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
 
-    latest_result = rfile.get_perf(JSON_PATH, round, 'train')
+    latest_result = rfile.get_perf(const.JSON_PATH, round, 'train')
     latest_round = latest_result['round']
     latest_perf = latest_result['data']
-    former_perf = rfile.get_perf(JSON_PATH, latest_round - 1, 'train')['data']
+    former_perf = rfile.get_perf(const.JSON_PATH, latest_round - 1, 'train')['data']
 
-    latest_grad = rfile.get_grad(JSON_PATH, layers, latest_round)['data']
+    latest_grad = rfile.get_grad(const.JSON_PATH, layers, latest_round)['data']
     reshape_latest_grad = rfile.reshape_grad(latest_grad)
-    former_grad = rfile.get_grad(JSON_PATH, layers, latest_round - 1)['data']
+    former_grad = rfile.get_grad(const.JSON_PATH, layers, latest_round - 1)['data']
     reshape_former_grad = rfile.reshape_grad(former_grad)
 
     zeno_obj = Zeno(p)
@@ -99,7 +99,7 @@ def auror(request):
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
 
-    result = rfile.get_grad(JSON_PATH, layers, round)
+    result = rfile.get_grad(const.JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
@@ -115,13 +115,13 @@ def auror(request):
 
 def sniper(request):
 
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     p = float(request.GET.get('p', -1))
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
 
-    result = rfile.get_grad(JSON_PATH, layers, round)
+    result = rfile.get_grad(const.JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
@@ -146,13 +146,13 @@ def sniper(request):
 
 def pca(request):
 
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     k = int(request.GET.get('k', -1))
     round = int(request.GET.get('round', -1))
     layers = rfile.get_layer(request.GET.get('layers', -1))
 
-    result = rfile.get_grad(JSON_PATH, layers, round)
+    result = rfile.get_grad(const.JSON_PATH, layers, round)
     round = result['round']
     gradients = result['data']
     data = rfile.reshape_grad(gradients)
