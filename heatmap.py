@@ -31,7 +31,7 @@ perf_a_obj = Perf('accuracy')
 perf_l_obj = Perf('loss')
 
 # LOAD CLIENT DATA
-conv1AllRoundFile = 'data/{}_{}.pkl'.format(500, 'conv1')
+conv1AllRoundFile = 'data/{}_{}.pkl'.format(500, 'layer1')
 allRoundRes = {}
 for layer in const.LAYERS_NANME:
     fileName = '{}/{}_{}.pkl'.format(const.DATA_SAVE_FILE, const.DEFAULT_ROUND_NUM, layer)
@@ -44,7 +44,6 @@ def getOneRoundFromFile(curRound, layer):
     if curRound <= const.DEFAULT_ROUND_NUM and curRound >= 2:
         fileName = '{}/{}_{}.pkl'.format(const.DATA_SAVE_FILE, const.DEFAULT_ROUND_NUM, layer)
         if os.path.exists(fileName):
-            print(fileName)
             return allRoundRes[layer][curRound]
     return getOneRound(curRound, layer)
 

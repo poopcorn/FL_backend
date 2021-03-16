@@ -140,12 +140,12 @@ def one_round_metric(request):
 
 # with open('data/dense_metrics.pkl', 'rb') as fp:
 #     Dense_Metric = pkl.load(fp)
-
-
-def get_all_round_metric(request):
-    rfile = RFile(const.JSON_PATH)
-    layers = rfile.get_layer(request.GET.getlist('layers[]', []))
-    return JsonResponse({'res': Dense_Metric}, safe=False)
+#
+#
+# def get_all_round_metric(request):
+#     rfile = RFile(const.JSON_PATH)
+#     layers = rfile.get_layer(request.GET.getlist('layers[]', []))
+#     return JsonResponse({'res': Dense_Metric}, safe=False)
 
 def get_multiple_information(request):
     start = int(request.GET.get('start', -1))
