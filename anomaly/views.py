@@ -10,6 +10,7 @@ from anomaly.metrics.pca import Pca
 from backend.rfile import RFile
 
 from const import *
+import const
 import numpy as np
 
 
@@ -92,7 +93,7 @@ def zeno(request):
 
 def auror(request):
 
-    rfile = RFile(JSON_PATH)
+    rfile = RFile(const.JSON_PATH)
 
     k = int(request.GET.get('k', -1))
     round = int(request.GET.get('round', -1))
