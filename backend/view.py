@@ -168,5 +168,5 @@ def get_tsne_res(request):
 def define_path(request):
     path = request.GET.get('dataset', 'DIGIT5')
     const.JSON_PATH = const.JSON_PREFIX + path + '/'
-    return JsonResponse({'Default data path changed.'}, safe=False)
+    return JsonResponse({'Define_Path': 'Default data path changed.'}, safe=False)
 
