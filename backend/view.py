@@ -167,5 +167,6 @@ def get_tsne_res(request):
 def define_path(request):
     path = request.GET.get('dataset', 'DIGIT5')
     const.JSON_PATH = const.JSON_PREFIX + path + '/'
-    return JsonResponse({'Define_Path': const.JSON_PATH}, safe=False)
+    const.DATA_SAVE_FILE = 'data/{}_{}'.format(const.DEFAULT_MODEL, path)
+    return JsonResponse({'Define_Path': const.JSON_PATH, 'Define_data_save_file': const.DATA_SAVE_FILE}, safe=False)
 
