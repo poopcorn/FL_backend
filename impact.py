@@ -3,8 +3,8 @@ import math
 from sklearn.manifold import TSNE
 from heatmap import getOneRoundFromFile
 from feature import getRoundGrad
-from const import DEFAULT_CLIENT_NUM
-
+# from const import DEFAULT_CLIENT_NUM
+import const
 
 def get_multipleInfo(x, y, interval=0.2, scale=[-1, 1]):
     domin = scale[1] - scale[0]
@@ -37,12 +37,12 @@ def multiple_information(start, end ,layer, filter):
     allMetrics = [getOneRoundFromFile(round, layer) for round in range(start, end + 1)]
     metricNum = sum(filter)
     roundNum = end - start + 1
-    clientMetrics = np.zeros((DEFAULT_CLIENT_NUM, metricNum * roundNum))
+    clientMetrics = np.zeros((const.DEFAULT_CLIENT_NUM, metricNum * roundNum))
     # tsne data
-    shape = ((DEFAULT_CLIENT_NUM + 1) * roundNum, metricNum)
+    shape = ((const.DEFAULT_CLIENT_NUM + 1) * roundNum, metricNum)
     tsne_X = np.zeros(shape)
-    avg_offset = DEFAULT_CLIENT_NUM * roundNum
-    for clientId in range(DEFAULT_CLIENT_NUM):
+    avg_offset = const.DEFAULT_CLIENT_NUM * roundNum
+    for clientId in range(const.DEFAULT_CLIENT_NUM):
         for roundIdx in range(roundNum):
             cnt = 0
             idx = clientId * roundNum + roundIdx
@@ -51,19 +51,19 @@ def multiple_information(start, end ,layer, filter):
                     continue
                 clientMetrics[clientId][roundIdx * metricNum + cnt] = allMetrics[roundIdx][metircId][str(clientId)]
                 tsne_X[idx][cnt] = allMetrics[roundIdx][metircId][str(clientId)]
-                tsne_X[avg_offset + roundIdx][cnt] += (allMetrics[roundIdx][metircId][str(clientId)] / DEFAULT_CLIENT_NUM)
+                tsne_X[avg_offset + roundIdx][cnt] += (allMetrics[roundIdx][metircId][str(clientId)] / const.DEFAULT_CLIENT_NUM)
                 cnt += 1
     
     # calculate Mutiple Information
-    multipleInfo = np.zeros((DEFAULT_CLIENT_NUM, DEFAULT_CLIENT_NUM), dtype=np.float32)
-    for i in range(DEFAULT_CLIENT_NUM):
-        for j in range(i + 1, DEFAULT_CLIENT_NUM):
+    multipleInfo = np.zeros((const.DEFAULT_CLIENT_NUM, const.DEFAULT_CLIENT_NUM), dtype=np.float32)
+    for i in range(const.DEFAULT_CLIENT_NUM):
+        for j in range(i + 1, const.DEFAULT_CLIENT_NUM):
             multipleInfo[j][i] = multipleInfo[i][j] = get_multipleInfo(clientMetrics[i], clientMetrics[j])
     
     # get metric data of tsne
     tsneRes = tsne.fit_transform(tsne_X)
     position = []
-    for i in range(DEFAULT_CLIENT_NUM):
+    for i in range(const.DEFAULT_CLIENT_NUM):
         offset = i * roundNum
         position.append(tsneRes[offset: offset + roundNum].tolist())
     return {
@@ -86,12 +86,12 @@ def get_tsne(start, end, layer):
     conv_shape = np.array(curFeature[0][0][layer]).flatten().shape[0]
     roundNum = end - start + 1
     # ((clientNum + avg * roundNum), featuremap Flatten shape)
-    shape = ((DEFAULT_CLIENT_NUM + 1) * roundNum, conv_shape)
+    shape = ((const.DEFAULT_CLIENT_NUM + 1) * roundNum, conv_shape)
     tsne_X = np.zeros(shape)
-    for i in range(DEFAULT_CLIENT_NUM + 1):
+    for i in range(const.DEFAULT_CLIENT_NUM + 1):
         for roundIdx in range(roundNum):
             idx = i * roundNum + roundIdx
-            if i == DEFAULT_CLIENT_NUM:
+            if i == const.DEFAULT_CLIENT_NUM:
                 # avg data
                 tsne_X[idx] = np.array(avgFeature[roundIdx][layer]).flatten()
             else:
@@ -102,8 +102,8 @@ def get_tsne(start, end, layer):
     # transfer to client postion and avg positon, length = DEFAULT_CLIENT_NUM + 1
     position = []
     diff = []
-    avg_offset = DEFAULT_CLIENT_NUM  * roundNum
-    for i in range(DEFAULT_CLIENT_NUM ):
+    avg_offset = const.DEFAULT_CLIENT_NUM  * roundNum
+    for i in range(const.DEFAULT_CLIENT_NUM ):
         offset = i * roundNum
         position.append(tsneRes[offset: offset + roundNum].tolist())    # calculate Tsne
         diff.append(

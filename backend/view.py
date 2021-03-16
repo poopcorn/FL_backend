@@ -160,7 +160,7 @@ def get_multiple_information(request):
 def get_tsne_res(request):
     start = int(request.GET.get('start', -1))
     end = int(request.GET.get('end', -1))
-    layer = request.GET.get('layer', 'conv1')
+    layer = request.GET.get('layer', 'layer1')
     res = get_tsne(start, end, layer)
     return JsonResponse({'res': res}, safe=False)
 
@@ -168,5 +168,7 @@ def define_path(request):
     path = request.GET.get('dataset', 'DIGIT5')
     const.JSON_PATH = const.JSON_PREFIX + path + '/'
     const.DATA_SAVE_FILE = 'data/{}_{}'.format(const.DEFAULT_MODEL, path)
-    return JsonResponse({'Define_Path': const.JSON_PATH, 'Define_data_save_file': const.DATA_SAVE_FILE}, safe=False)
+    const.DEFAULT_CLIENT_NUM = 5
+    const.DEFAULT_ROUND_NUM = 100
+    return JsonResponse({'Define_Path': const.JSON_PATH, 'Define_data_save_file': const.DATA_SAVE_FILE, 'Define_client_number': const.DEFAULT_CLIENT_NUM}, safe=False)
 
