@@ -3,7 +3,8 @@ import json
 import pickle
 import math
 
-from const import * 
+from const import *
+# import const
 
 from backend.file import File
 
@@ -20,7 +21,6 @@ from contribution.metrics.perf import Perf
 
 
 # READ RFILE
-rfile = RFile(JSON_PATH)
 sniper_obj = Sniper(0.8)
 fools_obj = Fools(15)
 auror_obj = Auror(1)
@@ -57,6 +57,8 @@ def getOneRoundFromFile(curRound, layer):
         res: list[][], shape = (9, clientNum),代表了每个指标，所有client的具体数值
 '''
 def getOneRound(round, layer):
+    rfile = RFile(JSON_PATH)
+
     # Anomaly Metrics
     result = rfile.get_grad(JSON_PATH, layer, round)
     after_round = result['round']
