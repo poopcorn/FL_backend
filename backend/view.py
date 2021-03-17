@@ -168,7 +168,11 @@ def define_path(request):
     path = request.GET.get('dataset', 'DIGIT5')
     const.JSON_PATH = const.JSON_PREFIX + path + '/'
     const.DATA_SAVE_FILE = 'data/{}_{}'.format(const.DEFAULT_MODEL, path)
-    const.DEFAULT_CLIENT_NUM = 5
-    const.DEFAULT_ROUND_NUM = 100
+    if path == 'DIGIT5':
+        const.DEFAULT_CLIENT_NUM = 5
+        const.DEFAULT_ROUND_NUM = 100
+    elif path == 'FEMNIST':
+        const.DEFAULT_CLIENT_NUM = 35
+        const.DEFAULT_ROUND_NUM = 150
     return JsonResponse({'Define_Path': const.JSON_PATH, 'Define_data_save_file': const.DATA_SAVE_FILE, 'Define_client_number': const.DEFAULT_CLIENT_NUM}, safe=False)
 
