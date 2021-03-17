@@ -12,5 +12,5 @@ LAYERS_NANME = ['layer1', 'layer2']
 ROUND_EVERY_FILE = 10
 
 # 模型计算数据保存目录
-JSON_PATH = '/home/zty_11621014/fedcare/federated/data/experiments/DIGIT5/'
+JSON_PATH = '/home/zty_11621014/fedcare/federated/data/experiments/FEMNIST/'
 JSON_PREFIX = '/home/zty_11621014/fedcare/federated/data/experiments/'
