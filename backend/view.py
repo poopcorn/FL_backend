@@ -1,15 +1,20 @@
 from django.http import HttpResponse
 from django.http import JsonResponse
 import json
+import os
+import pickle
+
+
 import pickle as pkl
 
 import const
 from const import ROUND_EVERY_FILE
 from backend.file import File
-from heatmap import getOneRound, getOneRoundFromFile
+# from heatmap import getOneRound, getOneRoundFromFile
 from impact import multiple_information, get_tsne
 from feature import getRoundGrad
 from backend.rfile import RFile
+import heatmap
 
 
 def performance(request):
@@ -127,14 +132,14 @@ def get_metrics_by_rounds(request):
     layer = rfile.get_layer(request.GET.get('layers', -1))
     res = []
     for round in range(curRound - roundNum + 1, curRound + 1):
-        res.append(getOneRoundFromFile(round, layer))
+        res.append(heatmap.getOneRoundFromFile(round, layer))
     return JsonResponse(res, safe=False)
 
 def one_round_metric(request):
     round = int(request.GET.get('round', -1))
     rfile = RFile(const.JSON_PATH)
     layer = rfile.get_layer(request.GET.get('layers', -1))
-    res = getOneRoundFromFile(round, layer)
+    res = heatmap.getOneRoundFromFile(round, layer)
     return JsonResponse(res, safe=False)
 
 
@@ -174,5 +179,13 @@ def define_path(request):
     elif path == 'FEMNIST':
         const.DEFAULT_CLIENT_NUM = 35
         const.DEFAULT_ROUND_NUM = 150
+
+    #re-read pkl file
+    for layer in const.LAYERS_NANME:
+        fileName = '{}/{}_{}.pkl'.format(const.DATA_SAVE_FILE, const.DEFAULT_ROUND_NUM, layer)
+        if os.path.exists(fileName):
+            with open(fileName, 'rb') as fp:
+                heatmap.allRoundRes[layer] = pickle.load(fp)
+                fp.close()
     return JsonResponse({'Define_Path': const.JSON_PATH, 'Define_data_save_file': const.DATA_SAVE_FILE, 'Define_client_number': const.DEFAULT_CLIENT_NUM}, safe=False)
 
