@@ -174,8 +174,8 @@ def define_path(request):
     const.JSON_PATH = const.JSON_PREFIX + path + '/'
     const.DATA_SAVE_FILE = 'data/{}_{}'.format(const.DEFAULT_MODEL, path)
     if path == 'DIGIT5':
-        const.DEFAULT_CLIENT_NUM = 5
-        const.DEFAULT_ROUND_NUM = 100
+        const.DEFAULT_CLIENT_NUM = 4
+        const.DEFAULT_ROUND_NUM = 99
     elif path == 'FEMNIST':
         const.DEFAULT_CLIENT_NUM = 35
         const.DEFAULT_ROUND_NUM = 150
@@ -187,5 +187,5 @@ def define_path(request):
             with open(fileName, 'rb') as fp:
                 heatmap.allRoundRes[layer] = pickle.load(fp)
                 fp.close()
-    return JsonResponse({'Define_Path': const.JSON_PATH, 'Define_data_save_file': const.DATA_SAVE_FILE, 'Define_client_number': const.DEFAULT_CLIENT_NUM}, safe=False)
+    return JsonResponse({'Define_Path': const.JSON_PATH, 'Define_data_save_file': const.DATA_SAVE_FILE, 'Define_client_number': const.DEFAULT_CLIENT_NUM, 'Define_round_num': const.DEFAULT_ROUND_NUM}, safe=False)
 
