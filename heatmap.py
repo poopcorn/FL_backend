@@ -41,7 +41,7 @@ for layer in const.LAYERS_NANME:
             fp.close()
 
 def getOneRoundFromFile(curRound, layer):
-    if curRound <= const.DEFAULT_ROUND_NUM and curRound >= 2:
+    if curRound <= const.DEFAULT_ROUND_NUM and curRound >= 1:
         fileName = '{}/{}_{}.pkl'.format(const.DATA_SAVE_FILE, const.DEFAULT_ROUND_NUM, layer)
         if os.path.exists(fileName):
             return allRoundRes[layer][curRound]
