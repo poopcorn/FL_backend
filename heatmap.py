@@ -172,12 +172,10 @@ def saveOneRound(roudEnd, layer, prefix):
     if os.path.exists(path):
         print('file {path} has already saved!')
         return
-    res = [[], []]
-    for i in range(2, roudEnd):
+    res = [[]]
+    for i in range(1, roudEnd):
         res.append(getOneRound(i, layer))
     with open(path, 'wb') as fp:
         pickle.dump(res, fp)
         fp.close()
     print('Finsh Save {}'.format(path))
-
-# saveOneRound(500, 'conv2', 'auror=1')
