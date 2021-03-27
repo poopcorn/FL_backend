@@ -6,11 +6,26 @@ import math
 import const
 from backend.file import File
 from backend.rfile import RFile
-from const import LAYERS_NANME
+from const import LAYERS_NANME, DATA_SAVE_FILE
 
 
 
-# READ RFILE
+def transferAvgGrad(prefix):
+    savePath = prefix + '/avg_grad/'
+    newPath = prefix + '/new_avg_grad/'
+    if not os.path.exists(newPath):
+        os.mkdir(newPath)
+    allFiles = os.listdir(savePath)
+    for fileName in allFiles:
+        with open(savePath + fileName, 'rb') as fp:
+            data = pickle.load(fp)
+            fp.close()
+        roundName = int(fileName.split('.')[0].split('_')[1]) - 1
+        with open(newPath + 'round_{}.pkl'.format(roundName), 'wb') as fp:
+            pickle.dump(data, fp)
+            fp.close()
+
+
 '''
     保存对应轮次中,所有client的平均梯度，包括所有层
     @params:
@@ -39,6 +54,23 @@ def saveAvgGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
             with open(savePath + 'round_{}.pkl'.format(roundName), 'wb') as fp:
                 pickle.dump(roundRes, fp)
                 fp.close()
+
+
+def transferClientAvg(prefix):
+    savePath = prefix + '/client_grad/'
+    newPath = prefix + '/new_client_grad/'
+    if not os.path.exists(newPath):
+        os.mkdir(newPath)
+    allFiles = os.listdir(savePath)
+    for fileName in allFiles:
+        with open(savePath + fileName, 'rb') as fp:
+            data = pickle.load(fp)
+            fp.close()
+        roundName = int(fileName.split('.')[0].split('_')[1]) - 1
+        with open(newPath + 'round_{}.pkl'.format(roundName), 'wb') as fp:
+            pickle.dump(data, fp)
+            fp.close()
+
 
 '''
     保存对应轮次中,所有client的所有梯度，包括所有层
@@ -77,8 +109,8 @@ def saveAllGrad(prefix, allRound, clientNum=35, layers=LAYERS_NANME):
                 fp.close()
 
 def getRoundGrad(round):
-    lastRound = '{}/client_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE, min(1, round - 1))
-    clientPath = '{}/client_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE,round)
+    lastRound = '{}/client_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE, min(0, round - 1))
+    clientPath = '{}/client_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE, round)
     avgPath = '{}/avg_grad/round_{}.pkl'.format(const.DATA_SAVE_FILE, round)
     with open(clientPath, 'rb') as fp:
         curRound = pickle.load(fp)

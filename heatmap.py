@@ -170,7 +170,14 @@ def get_all_round():
 def saveOneRound(roudEnd, layer, prefix):
     path = '{}/{}_{}.pkl'.format(prefix, roudEnd, layer)
     if os.path.exists(path):
-        print('file {path} has already saved!')
+        print('file {} has already saved!'.format(path))
+        # with open(path, 'rb') as fp:
+        #     res = pickle.load(fp)
+        # new_res = [res[i] for i in range(1, roudEnd)]
+        # new_res.append(getOneRound(roudEnd, layer))
+        # with open(path + '_bak', 'wb') as fp:
+        #     pickle.dump(new_res, fp)
+        #     fp.close()
         return
     res = [[]]
     for i in range(1, roudEnd):

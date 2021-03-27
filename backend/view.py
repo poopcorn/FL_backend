@@ -18,9 +18,11 @@ import heatmap
 
 
 def performance(request):
-
     round = int(request.GET.get('round', -1))
     num = int(request.GET.get('number', 1))
+
+    if const.DEFAULT_DATASET == 'FEMNIST':
+        round -= 1
 
     file = open(const.JSON_PATH + 'performance.json', 'r', encoding='utf-8')
     data = json.load(file)
